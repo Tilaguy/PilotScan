@@ -35,7 +35,7 @@ const long NOTA_SI[4]  ={ 3951,     7902,    1976,    3951};
 #endif
 
 
-void do_delay(int ms_delay, int num_ms, int us_delay, int num_us)  {
+void do_delay(int ms_delay, int num_ms, int us_delay, int num_us){
  int i;
 
  for(i=0;i<num_ms;i++)
@@ -47,8 +47,7 @@ void do_delay(int ms_delay, int num_ms, int us_delay, int num_us)  {
 }
 
 
-void generate_tone(long frequency, long duration)
-{
+void generate_tone(long frequency, long duration){
    int32 total_delay_time;                      // in microseconds
    long total_ms_delay_time, total_us_delay_time;
    int num_us_delays, num_ms_delays, ms_delay_time, us_delay_time;
@@ -66,13 +65,11 @@ void generate_tone(long frequency, long duration)
 
    num_periods = ((int32)duration*1000)/(1000000/frequency);
 
-   while((num_periods--) != 0)
-   {
+   while((num_periods--) != 0){
       do_delay(ms_delay_time, num_ms_delays, us_delay_time, num_us_delays);
       output_high(SPEAKER);
       do_delay(ms_delay_time, num_ms_delays, us_delay_time, num_us_delays);
       output_low(SPEAKER);
    }
-
    return;
 }

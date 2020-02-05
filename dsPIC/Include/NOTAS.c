@@ -1,5 +1,5 @@
 
-long negra=500;
-long blanca=1000;
-long corchea=250;
-long semicorchea=125;
+const int negra=500;
+const int blanca=1000;
+const int corchea=250;
+const int semicorchea=125;
