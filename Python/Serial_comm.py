@@ -13,20 +13,20 @@ ser = serial.Serial(
 ser.close()
 ser.open()
 
-def callback(data):
-    print data
-#    serial_message = '$'+data+'\n'
-#    serial_port.write(serial_message)
+def send_serial(data):
+#    print data
+    serial_message = '$'+data.data+'\n'
+    ser.write(serial_message)
         
 def talker():
     pub = rospy.Publisher('Serial', String, queue_size=10)
     rospy.init_node('Serial_comm', anonymous=False)
-    rospy.Subscriber('dsPIC_Comm', String, callback)
     rate = rospy.Rate(1) # 1hz
     while not rospy.is_shutdown():
-        str_in = ser.read_line()
+        rospy.Subscriber('Serial_out', String, send_serial)
+        str_in = ser.readline()
         if len(str_in)>0:
-            rospy.loginfo(str_in)
+#            rospy.loginfo(str_in)
             pub.publish(str_in)
         rate.sleep()
 
