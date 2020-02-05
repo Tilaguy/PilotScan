@@ -10,8 +10,6 @@ ser = serial.Serial(
     stopbits = serial.STOPBITS_ONE,
     bytesize = serial.EIGHTBITS
 )
-ser.close()
-ser.open()
 
 def send_serial(data):
 #    print data
@@ -21,13 +19,21 @@ def send_serial(data):
 def talker():
     pub = rospy.Publisher('Serial', String, queue_size=10)
     rospy.init_node('Serial_comm', anonymous=False)
-    rate = rospy.Rate(1) # 1hz
+    rate = rospy.Rate(0.5) # 1hz
+    rospy.Subscriber('Serial_out', String, send_serial)
     while not rospy.is_shutdown():
-        rospy.Subscriber('Serial_out', String, send_serial)
-        str_in = ser.readline()
-        if len(str_in)>0:
-#            rospy.loginfo(str_in)
-            pub.publish(str_in)
+        
+#        rospy.Subscriber('Serial_out', String, send_serial)
+        try:
+            ser.open()
+            str_in = ser.readline()
+            if len(str_in)>0:
+                rospy.loginfo("serial red")
+#                rospy.loginfo(str_in)
+                pub.publish(str_in)
+            ser.close()
+        except:
+            rospy.loginfo("serial did not read")
         rate.sleep()
 
 if __name__ == '__main__':
