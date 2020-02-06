@@ -2,25 +2,61 @@ import rospy
 from diagnostic_msgs.msg import KeyValue
 from std_msgs.msg import String
 
+def int2hex(num):
+    switcher = {
+        0:          '0',
+        1:          '1',
+        2:          '2',
+        3:          '3',
+        4:          '4',
+        5:          '5',
+        6:          '6',
+        7:          '7',
+        8:          '8',
+        9:          '9',
+        10:         'a',
+        11:         'b',
+        12:         'c',
+        13:         'd',
+        14:         'e',
+        15:         'f'
+    }
+    data_hex = switcher.get(num, '0')
+    return data_hex
+    
 def Hex2data(message):
     if message[0]=='$':
         print message
         message2 = message.split('$')
         data_doc = int(message2[1])
-        command = 0x0F & (data_doc>>16);
-        data1 =  0x0F & (data_doc>>12);
-        data2 =  0x0F & (data_doc>>8);
+        command =   0x00F & (data_doc>>16);
+        data1 =     0x00F & (data_doc>>12);
+        data2 =     0x00F & (data_doc>>8);
         checksum =  0x0FF & (data_doc);
         print (command,data1,data2,checksum)
         if (command+data1+data2)!=checksum:
             if (command+data1+data2+5)==checksum:
-                data = int(str(data1)+str(data2),16)
+                command_hex =   int2hex(command)
+                data1_hex =     int2hex(data1)
+                data2_hex =     int2hex(data2)
+                checksum_hex =  int2hex(checksum)
+                data_str = data1_hex+data2_hex
+                print data_str
+                data = int(data_str,16)
             else:
                 command = 0
                 data1 = 0
                 data2 = 0
         else:
-            data = float(str(data1)+'.'+str(data2),16)
+            command_hex =   int2hex(command)
+            data1_hex =     int2hex(data1)
+            data2_hex =     int2hex(data2)
+            checksum_hex =  int2hex(checksum)
+            data_h = int(data1_hex,16)
+            data_l = int(data2_hex,16)
+            data_str = str(data_h)+'.'+str(data_l)
+            print data_str
+            data = float(data_str)
         print (command,data1,data2,checksum)
         print data
         
