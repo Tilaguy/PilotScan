@@ -1,9 +1,8 @@
 import rospy
 from diagnostic_msgs.msg import KeyValue
 from std_msgs.msg import String
-import serial
 
-def Hex2data(message,serial_port):
+def Hex2data(message):
     if message[0]=='$':
         print message
         message2 = message.split('$')
@@ -34,7 +33,6 @@ def Hex2data(message,serial_port):
 #			data_int = 0;
 #	}
 
-#def data2Hex(message,serial_port):
 def data2Hex(message):
     pub = rospy.Publisher('Serial_out', String, queue_size=10)
     message2 = message.split('-')
@@ -92,20 +90,9 @@ def data2Hex(message):
     info = int(string,16)
     serial_message = str(info)
     pub.publish(serial_message)
-#    serial_port.write(serial_message)
 
 class listener:    
     def __init__(self):
-#        self.ser = serial.Serial(
-#            port = '/dev/ttyUSB0',
-#            baudrate = 9600,
-#            timeout = 0,
-#            parity = serial.PARITY_NONE,
-#            stopbits = serial.STOPBITS_ONE,
-#            bytesize = serial.EIGHTBITS
-#        )
-#        self.ser.close()
-#        self.ser.open()
         self.listener()
     
     def vn300_callback(self,data):
@@ -120,12 +107,15 @@ class listener:
             message = 'vn300->75'
         elif percentage==100:
             message = 'vn300-work'
-#        data2Hex(message,self.ser)
         data2Hex(message)
+    
+    def serial_data(self,data):
+        Hex2data(data.data)
     
     def listener(self):
         rospy.init_node('Monitoring', anonymous=False)
         rospy.Subscriber('vectornav/ConnStatus', KeyValue, self.vn300_callback)
+        rospy.Subscriber('Serial', String, self.serial_data)
         rospy.spin()
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ def talker():
     percentage = 0
     msgKey.value = 0
     flag = True
-    rate = rospy.Rate(1) # 10hz
+    rate = rospy.Rate(10) # 10hz
     while not rospy.is_shutdown():
         msgKey.value = str(percentage)
         if count == 10:
