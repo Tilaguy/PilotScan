@@ -23,6 +23,28 @@ def int2hex(num):
     }
     data_hex = switcher.get(num, '0')
     return data_hex
+
+def command_deco(num):
+    switcher = {
+        0:          '0',
+        1:          'I',
+        2:          'V',
+        3:          'T',
+        4:          'H',
+        5:          '-',
+        6:          '-',
+        7:          '-',
+        8:          '-',
+        9:          '-',
+        10:         'a',
+        11:         'b',
+        12:         'c',
+        13:         'd',
+        14:         'e',
+        15:         'f'
+    }
+    data = switcher.get(num, '0')
+    return data
     
 def Hex2data(message):
     if message[0]=='$':
@@ -34,31 +56,28 @@ def Hex2data(message):
         data2 =     0x00F & (data_doc>>8);
         checksum =  0x0FF & (data_doc);
         print (command,data1,data2,checksum)
-        if (command+data1+data2)!=checksum:
-            if (command+data1+data2+5)==checksum:
-                command_hex =   int2hex(command)
+        if command<9:
+            if (command+data1+data2)!=checksum:
+                if (command+data1+data2+5)==checksum:
+                    data1_hex =     int2hex(data1)
+                    data2_hex =     int2hex(data2)
+                    data_str = data1_hex+data2_hex
+                    print data_str
+                    data = int(data_str,16)
+                else:
+                    data = 0
+            else:
                 data1_hex =     int2hex(data1)
                 data2_hex =     int2hex(data2)
-                checksum_hex =  int2hex(checksum)
-                data_str = data1_hex+data2_hex
+                data_h = int(data1_hex,16)
+                data_l = int(data2_hex,16)
+                data_str = str(data_h)+'.'+str(data_l)
                 print data_str
-                data = int(data_str,16)
-            else:
-                command = 0
-                data1 = 0
-                data2 = 0
-        else:
-            command_hex =   int2hex(command)
-            data1_hex =     int2hex(data1)
-            data2_hex =     int2hex(data2)
-            checksum_hex =  int2hex(checksum)
-            data_h = int(data1_hex,16)
-            data_l = int(data2_hex,16)
-            data_str = str(data_h)+'.'+str(data_l)
-            print data_str
-            data = float(data_str)
-        print (command,data1,data2,checksum)
-        print data
+                data = float(data_str)
+            type_values = command_deco(command)
+            print type_value+' = '+str(data)
+#        else:
+           # Hardware configuration 
         
         
 
