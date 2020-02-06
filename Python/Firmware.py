@@ -26,7 +26,8 @@ def talker():
     rospy.Subscriber('Serial_out', String, send_serial)
     while not rospy.is_shutdown():
         try:
-            ser.write(serial_message)
+            rospy.loginfo(serial_message)
+            #ser.write(serial_message)
             rospy.sleep(0.01)
             str_in = ser.readline()
             if len(str_in)>0:
