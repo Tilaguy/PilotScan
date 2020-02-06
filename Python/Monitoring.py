@@ -124,7 +124,7 @@ class listener:
         data2Hex(message)
     
     def listener(self):
-        rospy.init_node('Firmware', anonymous=False)
+        rospy.init_node('Monitoring', anonymous=False)
         rospy.Subscriber('vectornav/ConnStatus', KeyValue, self.vn300_callback)
         rospy.spin()
 
