@@ -23,10 +23,10 @@ class listener:
     def talker(self):
         pub = rospy.Publisher('Serial', String, queue_size=10)
         rospy.init_node('Firmware', anonymous=False)
-        rate = rospy.Rate(2) # 2hz
+        rate = rospy.Rate(10) # 2hz
         rospy.Subscriber('Serial_out', String, self.send_serial)
         while not rospy.is_shutdown():
-            if self.cont == 15:
+            if self.cont == 10:
 #                print self.serial_message
                 self.ser.write(self.serial_message)
                 self.cont = 0
