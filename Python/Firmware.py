@@ -28,8 +28,8 @@ class listener:
         while not rospy.is_shutdown():
             if self.cont == 15:
 #                print self.serial_message
-                self.ser.write(serial_message)
-                cont = 0
+                self.ser.write(self.serial_message)
+                self.cont = 0
             str_in = self.ser.readline()
             if len(str_in)>0:
 #                rospy.loginfo(str_in)

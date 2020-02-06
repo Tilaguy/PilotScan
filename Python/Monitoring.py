@@ -6,32 +6,18 @@ def Hex2data(message):
     if message[0]=='$':
         print message
         message2 = message.split('$')
-        data_str = message2[1]
-        print data_str
-        print int(data_str)
-#    char dato1 = 0;
-#	char dato2 = 0;
-#	char checksum = 0;
-#	char data_aux[5] = "00000";
-#	unsigned int data_int = 0;
-#	unsigned int i;
-#	unsigned int n2 = 0;
-#	if (data[0]=='$'){
-#		//printf ("Recibido_dato = %s\n", data);
-#		for (i=1; i<(n-1); i++){
-#			data_aux[i] = data[i];
-#		}
-#		//printf ("Recibido_dato_aux = %s\n", data_aux);
-#		data_int = atoi(data_aux);
-#		//printf ("Recibido_dato = %d\n", data_int);
-#		dato1 = 0x0F&(data_int>>12);
-#		printf ("Recibido_dato1 = %x\n", dato1);
-#		dato2 = 0x0F&(data_int>>8);
-#		printf ("Recibido_dato2 = %x\n", dato2);
-#		checksum = 0x0F&data_int;
-#		if ((dato1+dato2)!=checksum)
-#			data_int = 0;
-#	}
+        data = int(message2[1])
+        command = 0x0F and (data>>16);
+        data1 =  0x0F and (data>>12);
+        data2 =  0x0F and (data>>8);
+        checksum =  0x0F and (data);
+        print (command,data1,data2,checksum)
+        if (command+data1+data2)!=checksum:
+            command = 0
+            data1 = 0
+            data2 = 0
+        
+        
 
 def data2Hex(message):
     pub = rospy.Publisher('Serial_out', String, queue_size=10)
