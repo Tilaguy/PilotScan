@@ -6,16 +6,23 @@ def Hex2data(message):
     if message[0]=='$':
         print message
         message2 = message.split('$')
-        data = int(message2[1])
-        command = 0x0F and (data>>16);
-        data1 =  0x0F and (data>>12);
-        data2 =  0x0F and (data>>8);
-        checksum =  0x0F and (data);
+        data_doc = int(message2[1])
+        command = 0x0F & (data_doc>>16);
+        data1 =  0x0F & (data_doc>>12);
+        data2 =  0x0F & (data_doc>>8);
+        checksum =  0x0FF & (data_doc);
         print (command,data1,data2,checksum)
         if (command+data1+data2)!=checksum:
-            command = 0
-            data1 = 0
-            data2 = 0
+            if (command+data1+data2+5)==checksum:
+                data = int(str(data1)+str(data2),16)
+            else:
+                command = 0
+                data1 = 0
+                data2 = 0
+        else:
+            data = float(str(data1)+'.'+str(data2),16)
+        print (command,data1,data2,checksum)
+        print data
         
         
 
