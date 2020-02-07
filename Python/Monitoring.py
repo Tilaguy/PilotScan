@@ -50,33 +50,36 @@ def Hex2data(message):
     if message[0]=='$':
 #        print message
         message2 = message.split('$')
-        data_doc = int(message2[1])
-        command =   0x00F & (data_doc>>16);
-        data1 =     0x00F & (data_doc>>12);
-        data2 =     0x00F & (data_doc>>8);
-        checksum =  0x0FF & (data_doc);
-        data1_hex =     int2hex(data1)
-        data2_hex =     int2hex(data2)
-#        print (command,data1,data2,checksum)
-        if command<9:
-            if (command+data1+data2)!=checksum:
-                if (command+data1+data2+5)==checksum:
-                    data_str = data1_hex+data2_hex
-#                    print data_str
-                    data = int(data_str,16)
+        try:
+            data_doc = int(message2[1])
+            command =   0x00F & (data_doc>>16);
+            data1 =     0x00F & (data_doc>>12);
+            data2 =     0x00F & (data_doc>>8);
+            checksum =  0x0FF & (data_doc);
+            data1_hex =     int2hex(data1)
+            data2_hex =     int2hex(data2)
+    #        print (command,data1,data2,checksum)
+            if command<9:
+                if (command+data1+data2)!=checksum:
+                    if (command+data1+data2+5)==checksum:
+                        data_str = data1_hex+data2_hex
+    #                    print data_str
+                        data = int(data_str,16)
+                    else:
+                        data = 0
                 else:
-                    data = 0
-            else:
-                
-                data_h = int(data1_hex,16)
-                data_l = int(data2_hex,16)
-                data_str = str(data_h)+'.'+str(data_l)
-#                print data_str
-                data = float(data_str)
-            type_value = command_deco(command)
-            print type_value+' = '+str(data)
-#        else:
-           # Hardware configuration 
+                    
+                    data_h = int(data1_hex,16)
+                    data_l = int(data2_hex,16)
+                    data_str = str(data_h)+'.'+str(data_l)
+    #                print data_str
+                    data = float(data_str)
+                type_value = command_deco(command)
+                print type_value+' = '+str(data)
+#            else:
+        except:
+            pass
+            
         
         
 
