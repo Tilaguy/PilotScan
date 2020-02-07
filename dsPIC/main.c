@@ -11,21 +11,19 @@
 // Import Libraies
 /********************************************/
 #include <Include\ports.h>
-#include <Include\TONOS.c>
 #include <Include\NOTAS.c>
+#include <Include\TONOS.c>
 #include <Include\serialProtocol.h>
-
-#use fast_io(B)
-#use fast_io(C)
-#use fast_io(D)
-#use fast_io(E)
-#use fast_io(F)
+#include <Include\NUC_interface.h>
 
 /********************************************/
 // Global Variables
 /********************************************/
+
 int1 aux_binary = true;
-int time_off = 0;
+int cont_tm4 = 0;
+int1 cont_tm5 = 0;
+int16 I5, I12, I24, m24V, m12V, m05V, VBAT;
 char buffer[6];
 
 const float S2I = 1.25*3.0/4095.0;	// Sensor of current
@@ -36,13 +34,6 @@ const float S05 = 2.35*3.0/4095.0;	// Sensor of 05 V
 /********************************************/
 // General configuration
 /********************************************/
-void setup(){
-	set_tris_C(0b00111111);
-	set_tris_B(0b00111111);
-	set_tris_E(0b11011000);
-	set_tris_F(0b10111111);
-	set_tris_D(0b11111110);
-}
 
 void ADC_setup(){
 	setup_adc_ports(sAN0 | sAN1 | sAN2 | sAN3 | sAN4 | sAN5 | sAN6);
@@ -125,37 +116,6 @@ void RBG(int R,int  B,int G, int pin){
 	}
 }
 
-void Delay_bip(int n, long frequency, long duration){
-	int i;
-	// delay with a bip each second
-	for (i=0; i<n; i++){
-		delay_ms(1000);
-		generate_tone(frequency,duration);
-	}
-}
-
-void sw_NUC(){
-	output_low(NUC_ON_OFF);
-	delay_ms(55);
-	output_high(NUC_ON_OFF);
-	delay_ms(100);
-}
-
-void shutdown_NUC(){
-	int n = 2;
-	if (time_off < n){
-		time_off++;
-		Delay_bip(1,NOTA_MI[2],negra);
-	}
-	if (time_off==n){
-		while (!INPUT(NUC_LED)) sw_NUC();// Turn off NUC
-		delay_ms(2500);
-		output_low(EN12);				 // Turn off 12V source
-		delay_ms(500);
-		output_low(EN24);				 // Turn off 12V source
-	}
-}
-
 void send_serial(long data){
 	printf ("$%ld\n",data);
 }
@@ -176,11 +136,11 @@ void RDA_isr(void){
     unsigned int i = 0;
     char inp;
     inp = getc();
-//    putc(inp);
+    //putc(inp);
     while(inp != '\n'){
         buffer[i] = inp;
         inp = getc();
-//        putc(inp);
+        //putc(inp);
         i++;
     }
     int n = sizeof(buffer);
@@ -188,63 +148,20 @@ void RDA_isr(void){
 	ENABLE_INTERRUPTS(int_rda);
 }
 
-/********************************************/
-// Main Function 
-/********************************************/
-void main(){
-	setup();
-	output_low(EN12);
-	output_low(EN24);
-	output_low(EN_ANA);
-	output_high(NUC_ON_OFF);
-	ADC_setup();
-	INT_setup();
-	
-	delay_ms(3000);
-	
-	int R,G,B;			// Enter color valued in RGB
-//	int data_in = 0;
-//	int n = 0;
-	delay_ms(500);
-	output_high(EN12);
-	delay_ms(500);
-	output_high(EN24);
-	delay_ms(500);
-	INPUT(Cap_bot);
-	
-	R = 240;
-	G = 240;
-	B = 240;
-	
-	//data2Hex(24.26, 'I');
-	//data2Hex(182.26, 'H');
-//	buffer = "$1799";
-//	int n = sizeof(buffer);
-//	Hex2data(buffer,n);
-	Delay_bip(1, NOTA_mi[2], corchea);
-	generate_tone(NOTA_sol[2],corchea);
-	ENABLE_INTERRUPTS(INT_EXT0);
-	ENABLE_INTERRUPTS(INT_RDA);
-	delay_ms(2000);
-	
-	while(TRUE){
-		int16 I5, I12, I24, m24V, m12V, m05V, VBAT;
-		output_high(NUC_ON_OFF);
-		enable_interrupts(int_rda);
-		
-		// Current medition
-		I5 = Read_ADC_ports(CH_I5);
-		I12 = Read_ADC_ports(CH_I12);
-		I24 = Read_ADC_ports(CH_I24);
-		// Voltage medition
-		output_high(EN_ANA);
-		delay_us(20);
-		m24V = Read_ADC_ports(CH_24V);
-		m12V = Read_ADC_ports(CH_12V);
-		m05V = Read_ADC_ports(CH_05V);
-		
+#int_TIMER4
+void  TIMER4_isr(void){
+	disable_interrupts(INT_TIMER4);
+	if (cont_tm4==50){
+		//generate_tone(NOTA_do[0],semicorchea);
 		if (INPUT(Cap_bot)){
-			output_high(FAN_B);
+			enable_interrupts(INT_TIMER5);
+			//H_actions(NUC_state[0],NUC_state[1]);
+			
+			opening2();
+			delay_ms(200);
+			
+			delay_ms(200);
+			Ending2();
 			
 			send_serial(data2Hex(I5*S2I, 'I'));
 			send_serial(data2Hex(I12*S2I, 'I'));
@@ -252,6 +169,7 @@ void main(){
 			send_serial(data2Hex(m05V*S05, 'V'));
 			send_serial(data2Hex(m12V*S12, 'V'));
 			send_serial(data2Hex(m24V*S24, 'V'));
+			send_serial(data2Hex(255.0, 'H'));
 			//output_low(EN_ANA);
 			//delay_us(20);
 			//m05V = Read_ADC_ports(CH_05V);
@@ -278,9 +196,98 @@ void main(){
 //				
 //			}
 		}else{
-		output_low(FAN_B);
+			Ending1();
+			disable_interrupts(INT_TIMER5);
+			output_low(FAN_A);
+			output_low(FAN_B);
 //			shutdown_NUC();
 		}
-		delay_ms(1000);
+		cont_tm4 = 0;
+	}
+	else{
+		cont_tm4++;
+	}
+	//set_timer4(50000);
+	set_timer4(0);
+	enable_interrupts(INT_TIMER4);
+}
+
+#int_TIMER5
+void  TIMER5_isr(void){
+//	disable_interrupts(INT_TIMER5);
+//	if (cont_tm5){
+//		output_high(FAN_B);
+//		cont_tm5 = 0;
+//	}
+//	else{
+//		output_low(FAN_B);
+//		cont_tm5 = 1;
+//	}
+//	//set_timer5(25000);
+//	set_timer5(0);
+//	enable_interrupts(INT_TIMER5);
+}
+
+/********************************************/
+// Main Function 
+/********************************************/
+void main(){
+	setup();
+	output_low(EN12);
+	output_low(EN24);
+	output_low(EN_ANA);
+	output_high(NUC_ON_OFF);
+	ADC_setup();
+	INT_setup();
+	setup_timer4(TMR_INTERNAL |TMR_DIV_BY_8 ,50000);
+	setup_timer5(TMR_INTERNAL |TMR_DIV_BY_8 ,2500);
+	
+	delay_ms(3000);
+	
+	int R,G,B;			// Enter color valued in RGB
+//	int data_in = 0;
+//	int n = 0;
+	delay_ms(500);
+	output_high(EN12);
+	delay_ms(500);
+	output_high(EN24);
+	delay_ms(500);
+	INPUT(Cap_bot);
+	
+	R = 240;
+	G = 240;
+	B = 240;
+	
+	//data2Hex(24.26, 'I');
+	//data2Hex(182.26, 'H');
+//	buffer = "$4868";
+//	int n = sizeof(buffer);
+//	Hex2data(buffer,n);
+	//Delay_bip(1, NOTA_mi[2], corchea);
+	//generate_tone(NOTA_sol[2],corchea);
+	opening1();
+	
+	delay_ms(2000);
+	ENABLE_INTERRUPTS(INT_EXT0);
+	ENABLE_INTERRUPTS(INT_RDA);
+	enable_interrupts(INT_TIMER4);
+	enable_interrupts(INT_TIMER5);
+	
+	while(TRUE){
+		output_high(NUC_ON_OFF);
+		enable_interrupts(int_rda);
+		
+		// Current medition
+		I5 = Read_ADC_ports(CH_I5);
+		I12 = Read_ADC_ports(CH_I12);
+		I24 = Read_ADC_ports(CH_I24);
+		// Voltage medition
+		output_high(EN_ANA);
+		delay_us(5);
+		m24V = Read_ADC_ports(CH_24V);
+		m12V = Read_ADC_ports(CH_12V);
+		m05V = Read_ADC_ports(CH_05V);
+		//H_actions(NUC_state[0],NUC_state[1]);
+		//delay_ms(1000);
 	}
 }
