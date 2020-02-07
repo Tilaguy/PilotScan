@@ -48,33 +48,32 @@ def command_deco(num):
     
 def Hex2data(message):
     if message[0]=='$':
-        print message
+#        print message
         message2 = message.split('$')
         data_doc = int(message2[1])
         command =   0x00F & (data_doc>>16);
         data1 =     0x00F & (data_doc>>12);
         data2 =     0x00F & (data_doc>>8);
         checksum =  0x0FF & (data_doc);
-        print (command,data1,data2,checksum)
+        data1_hex =     int2hex(data1)
+        data2_hex =     int2hex(data2)
+#        print (command,data1,data2,checksum)
         if command<9:
             if (command+data1+data2)!=checksum:
                 if (command+data1+data2+5)==checksum:
-                    data1_hex =     int2hex(data1)
-                    data2_hex =     int2hex(data2)
                     data_str = data1_hex+data2_hex
-                    print data_str
+#                    print data_str
                     data = int(data_str,16)
                 else:
                     data = 0
             else:
-                data1_hex =     int2hex(data1)
-                data2_hex =     int2hex(data2)
+                
                 data_h = int(data1_hex,16)
                 data_l = int(data2_hex,16)
                 data_str = str(data_h)+'.'+str(data_l)
-                print data_str
+#                print data_str
                 data = float(data_str)
-            type_values = command_deco(command)
+            type_value = command_deco(command)
             print type_value+' = '+str(data)
 #        else:
            # Hardware configuration 
@@ -111,29 +110,11 @@ def data2Hex(message):
             ">75":      '6',
             "work":     '7'
         }
-    switcher3 = {
-        0:          '0',
-        1:          '1',
-        2:          '2',
-        3:          '3',
-        4:          '4',
-        5:          '5',
-        6:          '6',
-        7:          '7',
-        8:          '8',
-        9:          '9',
-        10:         'a',
-        11:         'b',
-        12:         'c',
-        13:         'd',
-        14:         'e',
-        15:         'f'
-    }
     dato1 = switcher1.get(message2[0], "0")
     dato2 = switcher2.get(message2[1], "0")
     checksum_int = int(dato1,16)+int(dato2,16)
-    checksum1 = switcher3.get(checksum_int/16, "0")
-    checksum2 = switcher3.get(checksum_int%16, "0")
+    checksum1 = int2hex(checksum_int/16)
+    checksum2 = int2hex(checksum_int%16)
     string = dato1+dato2+checksum1+checksum2
     info = int(string,16)
     serial_message = str(info)
