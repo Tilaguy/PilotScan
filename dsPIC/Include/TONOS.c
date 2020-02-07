@@ -32,6 +32,7 @@ const long NOTA_SOLS[4] ={ 3322,     6645,    1661,    3322};
 const long NOTA_LA[4]  ={ 3520,     7040,    1760,    3520};
 const long NOTA_LAS[4] ={ 3729,     7459,    1865,    3729};
 const long NOTA_SI[4]  ={ 3951,     7902,    1976,    3951};
+const long SILENCE = 25000;
 #endif
 
 
@@ -72,4 +73,53 @@ void generate_tone(long frequency, long duration){
       output_low(SPEAKER);
    }
    return;
+}
+
+void Delay_bip(int n, long frequency, long duration){
+	int i;
+	// delay with a bip each second
+	for (i=0; i<n; i++){
+		delay_ms(1000);
+		generate_tone(frequency,duration);
+	}
+}
+	
+void opening1(){
+	generate_tone(NOTA_la[0],corchea);
+	generate_tone(NOTA_la[0],corchea);
+	generate_tone(NOTA_sol[0],corchea);
+	generate_tone(NOTA_la[0],corchea);
+	generate_tone(NOTA_si[0],corchea);
+	generate_tone(NOTA_la[0],corchea);
+}
+
+void opening2(){
+	generate_tone(NOTA_mi[0],corchea);
+	generate_tone(SILENCE,corchea);
+	generate_tone(NOTA_mi[0],corchea);
+	generate_tone(SILENCE,corchea);
+	generate_tone(NOTA_do[0],corchea);
+	generate_tone(NOTA_mi[0],corchea);
+	generate_tone(NOTA_sol[0],corchea);
+}
+
+void Ending1(){
+	generate_tone(NOTA_sol[0],corchea);
+	generate_tone(NOTA_fa[0],corchea);
+	generate_tone(NOTA_mi[0],corchea);
+	generate_tone(NOTA_fa[0],corchea);
+	generate_tone(NOTA_sol[0],corchea);
+	generate_tone(NOTA_la[0],corchea);
+	generate_tone(SILENCE,corchea);
+	generate_tone(NOTA_sol[0],corchea);
+}
+
+void Ending2(){
+	generate_tone(NOTA_mi[0],corchea);
+	generate_tone(SILENCE,corchea);
+	generate_tone(NOTA_mi[0],corchea);
+	generate_tone(SILENCE,corchea);
+	generate_tone(NOTA_do[0],corchea);
+	generate_tone(NOTA_mi[0],corchea);
+	generate_tone(NOTA_sol[0],corchea);
 }

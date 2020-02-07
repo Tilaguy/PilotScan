@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <Include\hardware_actions.h>
+char NUC_state[2];
 
 #ifndef serialProtocol
 
@@ -83,28 +85,31 @@ void Hex2data(char data[], int n){
 	char dato1 = 0;
 	char dato2 = 0;
 	char checksum = 0;
-	char data_aux[5] = "00000";
+	char data_aux[5] = "0000";
 	unsigned int data_int = 0;
 	unsigned int i;
-	unsigned int n2 = 0;
+	//printf ("Recibido_dato = %s\n", data);
 	if (data[0]=='$'){
-		//printf ("Recibido_dato = %s\n", data);
+		//printf ("Recibido2_dato = %s\n", data);
 		for (i=1; i<(n-1); i++){
-			data_aux[i] = data[i];
+			data_aux[i-1] = data[i];
 		}
 		//printf ("Recibido_dato_aux = %s\n", data_aux);
 		data_int = atoi(data_aux);
 		//printf ("Recibido_dato = %d\n", data_int);
 		dato1 = 0x0F&(data_int>>12);
-		printf ("Recibido_dato1 = %x\n", dato1);
+		//printf ("Recibido_dato1 = %x\n", dato1);
 		dato2 = 0x0F&(data_int>>8);
-		printf ("Recibido_dato2 = %x\n", dato2);
+		//printf ("Recibido_dato2 = %x\n", dato2);
 		checksum = 0x0F&data_int;
-		if ((dato1+dato2)!=checksum)
-			data_int = 0;
+		if ((dato1+dato2)!=checksum){
+			dato1 = 0;
+			dato2 = 0;
+		}
+		NUC_state[0] = dato1;
+		NUC_state[1] = dato2;
 	}
 }
-
 #define serialProtocol
 
 #endif

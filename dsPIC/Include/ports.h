@@ -1,3 +1,16 @@
+#use fast_io(B)
+#use fast_io(C)
+#use fast_io(D)
+#use fast_io(E)
+#use fast_io(F)
+
+void setup(){
+	set_tris_B(0b00111111);
+	set_tris_C(0b00111111);
+	set_tris_D(0b11110100);
+	set_tris_E(0b11011000);
+	set_tris_F(0b10111111);
+}
 /********************************************/
 // Port definition
 /********************************************/
