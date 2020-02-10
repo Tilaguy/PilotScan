@@ -32,3 +32,20 @@ Modo 1.b: Numeros superiores a 16
 Modo 2:
 - El priemro que es 'a', indica un mensaje de tipo instruccion para la NUC.
 - El segundo y el tercero corresponden a una codificacion de diferentes tipos de acciones que se puede solicitar desde microcontrolador a la NUC.
+
+
+
+
+Insatalacion del System_monitor node: (https://github.com/RobotnikAutomation/system_monitor)
+
+En la carpeta src del workspace se descarga usando la siguiente instruccion, se regresa al workspace y se compila usando la instruccion catkin_make
+
+$ git clone https://github.com/RobotnikAutomation/system_monitor    
+
+Se instlan algunas dependencias necesarias para la ejecucion:
+
+$ sudo apt-get install sysstat ifstat ntpdate
+
+Para correr el nodo 
+
+$ roslaunch system_monitor system_monitor.launch 
