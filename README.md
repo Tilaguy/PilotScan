@@ -34,7 +34,7 @@ Modo 2:
 - El segundo y el tercero corresponden a una codificacion de diferentes tipos de acciones que se puede solicitar desde microcontrolador a la NUC.
 
 
-
+-------------------------------------------------------------------------
 
 Insatalacion del System_monitor node: (https://github.com/RobotnikAutomation/system_monitor)
 
