@@ -178,3 +178,13 @@ En esta libreria usamos las notas tipicas y a su vez cada nota posee 4 frecuenci
 Esta libreria es usada para el funcionamiento del LED ws2815b escogiendo un color dentro del espectro RGB.
 
 ### Authors.
+
+
+
+
+### added by Tila.
+Manjeo de I2C.
+
+La comunicacion con lalgunos sensores se hace mediante el protocolo I2C, en el excel esta la tabla de direcciones, de primero debe ir el mux pues es el primer elemento con el que se conecta el micro, de hay en adelante expliquen como se configuran las direcciones de los demas sensores.
+
+
