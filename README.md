@@ -205,7 +205,9 @@ Para el proyecto usamos algunas librerias.
 * NOTAS.C
 * TONOS.C
 * ws2815b.C
+Manjeo de I2C.
 
+La comunicacion con lalgunos sensores se hace mediante el protocolo I2C, en el excel esta la tabla de direcciones, de primero debe ir el mux pues es el primer elemento con el que se conecta el micro, de hay en adelante expliquen como se configuran las direcciones de los demas sensores.
 #### Notas.C
 Esta libreria se usa para definir el tiempo de una nota usada por el Buzzer en el sistema.
 
@@ -220,9 +222,7 @@ Esta libreria es usada para el funcionamiento del LED ws2815b escogiendo un colo
 
 
 
-### added by Tila.
-Manjeo de I2C.
 
-La comunicacion con lalgunos sensores se hace mediante el protocolo I2C, en el excel esta la tabla de direcciones, de primero debe ir el mux pues es el primer elemento con el que se conecta el micro, de hay en adelante expliquen como se configuran las direcciones de los demas sensores.
+
 
 
