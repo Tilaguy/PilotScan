@@ -199,23 +199,39 @@ D|	x|	y|	Hight|
 |F	|4	|0	|turn all tty ports on|
 |F	|4	|4	|turn ROS on|
 
-### Repository Folders
+## Repository Folders
 Para el proyecto usamos algunas librerias.
-
+### DSPIC
+* I2C_DIR
+* Max17055.bak
+* Max17055.cpp
+* Max17055.h
 * NOTAS.C
+* Nuc_interface.h
 * TONOS.C
+* Hadware_actions.h
+* Ports.h
+* SerialProtocol.h
 * ws2815b.C
-Manjeo de I2C.
 
-La comunicacion con lalgunos sensores se hace mediante el protocolo I2C, en el excel esta la tabla de direcciones, de primero debe ir el mux pues es el primer elemento con el que se conecta el micro, de hay en adelante expliquen como se configuran las direcciones de los demas sensores.
+####  I2C_DIR
+La comunicación con algunos sensores se hace mediante el protocolo I2C y este  se encuentra en un pin específico que se encuentra en la hoja de datos del producto, así mismo  el puerto del micro de I2C debe ir a un el mux pues se necesita enviar y recibir datos de varios sensores.
+#### Max17055.h
+Esta librería se usa para tomar la lectura del estado actual de la batería y además hacer una copia de respaldo de las mediciones.Esta librería se usa para tomar la lectura del estado actual de la batería y además hacer una copia de respaldo de las mediciones, de igual manera esta librería se basó en Max17055.bank y Max17055.cpp. 
 #### Notas.C
-Esta libreria se usa para definir el tiempo de una nota usada por el Buzzer en el sistema.
-
+Esta librería se usa para definir el tiempo de una nota usada por el Buzzer en el sistema.
+#### Nuc_interface.h
+Esta librería se usa para apagar la NUC y la batería de 12v.
 #### Tonos.C
-En esta libreria usamos las notas tipicas y a su vez cada nota posee 4 frecuencias distintas separadas por octavas.
+En esta librería usamos las notas típicas y a su vez cada nota posee 4 frecuencias distintas separadas por octavas.
+#### Hadware_actions.h
+Esta librería se usa para detectar un error en los sensores e informar mediante el buzzer o mediante el led RGB, además esta librería tiene un sonido especifico y un color especifico por el error correspondiente.
+#### Ports.h
+Esta librería se usa para definir  a que pin está conectado los periféricos.
+#### SerialProtocol.h
 
 #### ws2815b.C
-Esta libreria es usada para el funcionamiento del LED ws2815b escogiendo un color dentro del espectro RGB.
+Esta librería es usada para el funcionamiento del LED ws2815b escogiendo un color dentro del espectro RGB.
 
 ### Authors.
 
