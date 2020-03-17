@@ -201,6 +201,16 @@ D|	x|	y|	Hight|
 
 ## Repository Folders
 Para el proyecto usamos algunas librerias.
+### PIC
+* Timer.c
+
+#### Timer.c
+Esta librería funciona como un reloj fijo.
+### Python
+* Firmware.py
+* Monitoring.py
+* Resources.py
+* Sim_vn300.py
 ### DSPIC
 * I2C_DIR
 * Max17055.bak
