@@ -25,16 +25,16 @@ $ roslaunch system_monitor system_monitor.launch
 ~~~
 ### Comunicacion NUC-Micro 
 ##### NUC 
-El protocolo se construye a partir de una tabla de valores contantes las cuales indican el estado de diferentes señales de sistema tales como el encendido el funcionamiento u otras opciones de los perifericos. El primer Byte (data 1) corresponde al perifierico el cual informa su estado, el segundo Byte (data 2) realiza una funcion dependiendo del periferico, sin embargo cuando data1 y data2 son 0 (cero) significa un error en el periferico.
+El protocolo se construye a partir de una tabla de valores contantes las cuales indican el estado de diferentes señales de sistema tales como el encendido el funcionamiento u otras opciones de los perifericos. El primer Byte (data 1) corresponde al perifierico el cual informa su estado, el segundo Byte (data 2) realiza una funcion dependiendo del periferico, sin embargo cuando data1 y data2 son 0 (cero) significa un error en el periferico, de igual manera el error es emitido por medio de un led RGB el cual se ha asignado un color especifico dependiedo del error y su color se especifica en cada tabla.
 
 ##### Micro
 El dato llega como un entero codificado de 4 (cuatro) Bytes, los primeros 2 (dos) Bytes son la informacion codificada mientras que los otros 2 (dos) Bytes corresponden a Bytes de verificacion llamados checksum, estos corresponden a la suma de los 2 (dos) primeros Bytes, esto con el objetivo de verificar que la informacion recibida corresponde efectivamente a la enviada por la NUC.
 
 #### Tabla de los mensajes del sistema
 
-data 1 | data 2 | message | meaning
--- | -- | -- | --
-0 | 0 |         |Reserve
+data 1 | data 2 | message | meaning| R | G | B
+-- | -- | -- | -- | -- | -- | -- 
+0 | 0 |         |Reserve|0|0|0
 0 | 1 | sys-on_24 |	Turn-on source 24V
 0 | 2 | sys-off_12 |Turn-off source 12V
 0 | 3 | sys-off_24 |Turn-off source 24V
@@ -52,16 +52,16 @@ data 1 | data 2 | message | meaning
 0 | F |
 
 ### Tabla del VN300
-data 1 | data 2 | message | meaning
--- | -- | -- | --
-1 | 0 |         |Reserve
-1 | 1 | VN300-NC |	VN300 No Connected
-1 | 2 | VN300-Start |VN 300 Starting
-1 | 3 | VN300-<25 | VN300 <25%
-1 | 4 | VN300-<50 |25% < VN300 <50%
-1 | 5 | VN300-<75 |	50% < VN300 <75
-1 | 6 | VN300->75 |VN300 >75%
-1 | 7 |VN300-Work | VN300 Working
+data 1 | data 2 | message | meaning | R | G | B |N/LED
+-- | -- | -- | -- | -- | -- | -- |--
+1 | 0 |         |Reserve|0|0|0
+1 | 1 | VN300-NC |	VN300 No Connected|240|0|0|L1
+1 | 2 | VN300-Start |VN 300 Starting|240|128|0|L1
+1 | 3 | VN300-<25 | VN300 <25%|50|0|240|L1
+1 | 4 | VN300-<50 |25% < VN300 <50%|50|80|160|L1
+1 | 5 | VN300-<75 |	50% < VN300 <75|50|160|80|L1
+1 | 6 | VN300->75 |VN300 >75%|50|240|0|L1
+1 | 7 |VN300-Work | VN300 Working|0|240|0|L1
 1 | 8 |
 1 | 9 |
 1 | A |
@@ -72,16 +72,16 @@ data 1 | data 2 | message | meaning
 1 | F |
 
 ### Tabla del M8 LiDAR
-data 1 | data 2 | message | meaning
--- | -- | -- | --
-2 | 0 |         |Reserve
-2 | 1 | M8-NC |	M8 No Ping
-2 | 2 | M8-Start |M8 Starting
-2 | 3 |  |
-2 | 4 |  |
-2 | 5 |  |
-2 | 6 |  |
-2 | 7 |M8-Work | M8 Working|
+data 1 | data 2 | message | meaning | R | G | B |N/LED
+-- | -- | -- | -- | -- | -- | -- | --
+2 | 0 |         |Reserve|0|0|0
+2 | 1 | M8-NC |	M8 No Ping|240	|0|0|L2
+2 | 2 | M8-Start |M8 Starting|240|128|0|L2
+2 | 3 |  | ||||L2
+2 | 4 |  | ||||L2
+2 | 5 |  | ||||L2
+2 | 6 |  | ||||L2
+2 | 7 |M8-Work | M8 Working|0|240|0 |L2
 2 | 8 |
 2 | 9 |
 2 | A |
@@ -91,9 +91,9 @@ data 1 | data 2 | message | meaning
 2 | E |
 2 | F |
 ### Tabla de la Camara
-data 1 | data 2 | message | meaning
--- | -- | -- | --
-3 | 0 |         |Reserve
+data 1 | data 2 | message | meaning | R | G | B
+-- | -- | -- | -- | -- | -- | -- 
+3 | 0 |         |Reserve|0|0|0
 3 | 1 | CAM-NC | CAM No Connected
 3 | 2 | CAM-Start |CAM Starting
 3 | 3 |  |
@@ -109,6 +109,45 @@ data 1 | data 2 | message | meaning
 3 | D |
 3 | E |
 3 | F |
+### Tabla de Fuzzi-Temp
+data 1 | data 2 | message | meaning | R | G | B
+-- | -- | -- | -- | -- | -- | -- 
+3 | 0 |  |Reserve|0|0|0
+3 | 1 |   
+3 | 2 |  
+3 | 3 |  
+3 | 4 |  
+3 | 5 |  
+3 | 6 |  
+3 | 7 |   
+3 | 8 |
+3 | 9 |
+3 | A |
+3 | B |
+3 | C |FUZZ-T1|>25°|13	|0|	125
+3 | D |FUZZ-T2|>30°|113|	0|	125
+3 | E |FUZZ-T3|>35°|255|	128|	0
+3 | F |FUZZ-T4|>40°|250|0|	0
+### Tabla errores de memoria
+data 1 | data 2 | message | meaning | R | G | B |N/LED
+-- | -- | -- | -- | -- | -- | -- | --
+A | 0 |  |Reserve|0|0|0
+A | 1 | memo-RAM_E1 |RAM alert1|255|64|64|L3
+A | 2 | memo-RAM_E2 |RAM alert2|255|0|0|L3
+A | 3 |  |||||L3
+A | 4 |  |||||L3
+A | 5 |  |||||L3
+A | 6 | memo-ROM_E1 |ROM alert1|64|133|255 |L3
+A | 7 | memo-ROM_E2 |ROM alert2|64|64|255|L3
+A | 8 | memo-ROM_E3 |ROM alert3|0|0|255|L3
+A | 9 |
+A | A |
+A | B |
+A | C |
+A | D |
+A | E |
+A | F |
+
 #### Comunicacion Micro-NUC
 Este protocolo consta de tres Bytes y dos modos de funcionamiento. El primer modo (Modo 1) consiste en enviar la informacion adquirida por los sensores, mientras que el segundo modo (Modo 2) envia comandos de sistema que la NUC debe ejecutar. Ademas el primer modo se puede subdividir de igual forma en dos tipos, estos estan estructurados como:
 ##### Modo 1.a
@@ -159,7 +198,6 @@ D|	x|	y|	Hight|
 |F	|0	|4	|turn LiDAR on|
 |F	|4	|0	|turn all tty ports on|
 |F	|4	|4	|turn ROS on|
-
 
 ### Repository Folders
 Para el proyecto usamos algunas librerias.
