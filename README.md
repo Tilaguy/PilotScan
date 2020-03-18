@@ -207,10 +207,12 @@ Para el proyecto usamos algunas librerias.
 #### Timer.c
 Esta librería funciona como un reloj fijo.
 ### Python
+Los siguientes archivos son nodos los cuales publican su información por medio de tópicos con la ayuda de la librería ROS
 * Firmware.py
 * Monitoring.py
 * Resources.py
 * Sim_vn300.py
+* Prueba_serial_dspic.py
 ### DSPIC
 * I2C_DIR
 * Max17055.bak
@@ -239,7 +241,7 @@ Esta librería se usa para detectar un error en los sensores e informar mediante
 #### Ports.h
 Esta librería se usa para definir  a que pin está conectado los periféricos.
 #### SerialProtocol.h
-
+Esta librería es usada para la comunicación del micro con la NUC la cual fue explicada anteriormente.
 #### ws2815b.C
 Esta librería es usada para el funcionamiento del LED ws2815b escogiendo un color dentro del espectro RGB.
 
