@@ -5,29 +5,38 @@ En construccion
 ### Software Installation
 
 ##### System_monitor Installation
-Insatalacion del System_monitor node: (https://github.com/RobotnikAutomation/system_monitor)
+Insatalacion del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
 
-Dentro de la carpeta src del workspace se descarga el system monitor usando la siguiente instruccion:
+Dentro de la carpeta src del workspace, se debe descargar el *system_monitor* usando la siguiente instrucción:
 ~~~
 $ git clone https://github.com/RobotnikAutomation/system_monitor
 ~~~
-Luego se regresa al workspace y se compila usando la instruccion 
-~~~
-$ catkin_make
-~~~
-Acto seguido se instalan algunas dependencias necesarias para la ejecucion usando las siguientes instrucciones:
+Es necesario instalar algunas dependencias adicionales para su ejecución,
 ~~~
 $ sudo apt-get install sysstat ifstat ntpdate
 ~~~
-Por ultimo, para correr el nodo usamos la instruccion:
+Luego, se compila en el workspace y se asigna el directorio *devel*,
+~~~
+$ catkin_make
+$ source devel/setup.bash
+~~~
+Por ultimo, para lanzar el nodo se usa la instrucción:
 ~~~
 $ roslaunch system_monitor system_monitor.launch
 ~~~
-### Comunicacion NUC-Micro 
-##### NUC 
-El protocolo se construye a partir de una tabla de valores contantes las cuales indican el estado de diferentes señales de sistema tales como el encendido el funcionamiento u otras opciones de los perifericos. El primer Byte (data 1) corresponde al perifierico el cual informa su estado, el segundo Byte (data 2) realiza una funcion dependiendo del periferico, sin embargo cuando data1 y data2 son 0 (cero) significa un error en el periferico, de igual manera el error es emitido por medio de un led RGB el cual se ha asignado un color especifico dependiedo del error y su color se especifica en cada tabla.
+### Comunicación serial **computador-dsPIC**
+El protocolo que se usa para la comunicación entre el microcontrolador y el computador, genera un numero que codifica la información en hexadecimal, esta codificación depende de quien es transmisor, la cual se explica a continuación. Ademas, el protocolo cuenta con un Byte de inicio (*$*) que indical el comienzo del mensaje y un salto de linea (*\n*) que informa el final.
 
-##### Micro
+##### Protocolo de envio desde la Intel® NUC Board
+Su protocolo se construye a partir de una tabla de valores constantes, los cuales indican el estado del sistema en diferentes ambitos tales como: monitoreo y control de las funtes, el cominicacion de problemas de ejecucion y otros requerimientos necesarios para el correcto funcionamiento del sistema. Dicho protocolo consta de dos Byte, los cuales codifican la informacion.
+
+El primer Byte (data 1) indica el origen de la informacion (VN-300, Lidar, estado del sistema, etc) de la cual se esta dando a conocer su estado. El segundo Byte (data 2) informa el estado y da idea de como actuar al microcontrolador. Los dos Bytes restantes (Checksum)
+
+**P. ej.** Si la *temperatura media de los nucleos del sistema de computo* es alta, en microcontrolador debe *encender los ventiladores* e cierta forma particular, lo que codificado en el protocolo se interpreta como:
+
+sin embargo cuando data1 y data2 son 0 (cero) significa un error en el periferico, de igual manera el error es emitido por medio de un led RGB el cual se ha asignado un color especifico dependiedo del error y su color se especifica en cada tabla.
+
+##### rotocolo de envio desde el dsPIC
 El dato llega como un entero codificado de 4 (cuatro) Bytes, los primeros 2 (dos) Bytes son la informacion codificada mientras que los otros 2 (dos) Bytes corresponden a Bytes de verificacion llamados checksum, estos corresponden a la suma de los 2 (dos) primeros Bytes, esto con el objetivo de verificar que la informacion recibida corresponde efectivamente a la enviada por la NUC.
 
 #### Tabla de los mensajes del sistema
