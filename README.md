@@ -2,6 +2,15 @@
 ---
 En construccion
 ---
+### Descripción
+
+En este repositorio se encuentran alojados los algoritmos necesarios para elaborar una interface de comunicación codificada con capacidad de detección de errores, durante el proceso de envío. Esta interfaz hace parte del sistema titulado **PilotScan\***, el cual consta de un sistema central de procesamiento y un sistema de respaldo que monitora de forma continua, el estado del sistema tanto a nivel hardware como software, además tiene la capacidad de realizar acciones indicadas por sistema central, sobre los diferentes módulos que conforman el sistema.
+
+Para el sistema central de procesamiento, se usa una **Intel®️ NUC Board** con linux 16.04 server. Para el sistema de respaldo se emplea un **dsPIC 30F4011**, el cual conecta diferentes sensores analogicos y digitales, tiene la capacidad de habilitar y deshabilitar fuentes reguladas de *12 V* y *24 V*, además de emitir mensajes al usuario a través de una bocina y LEDs RGB programables.
+
+**\*** La información detallada del sistema se encuentra alojada en el repositorio: \ link \
+
+---
 ### Software Installation
 
 ##### System_monitor Installation
@@ -47,6 +56,124 @@ Cada mensaje es interpretado por el microcontrolador quien efectua algun tipo de
   - Encendido de ventidador ( PWM ~ 60% )
   - LED RGB 4 ([R,G,B] = [25,128,0])
   ~~~
+#### Tabla 1. Mensajes del sistema.
+
+data 1 | data 2 | message | meaning
+-- | -- | -- | -- 
+0 | 0 |         |Reserve
+0 | 1 | sys-on_24 |	Turn-on source 24V
+0 | 2 | sys-off_12 |Turn-off source 12V
+0 | 3 | sys-off_24 |Turn-off source 24V
+0 | 4 | sys-mem_E |	Memory problem
+0 | 5 | sys-on_m8 |	Turn LiDAR on
+0 | 6 | sys-on_tty |Turn all tty ports on
+0 | 7 |
+0 | 8 |
+0 | 9 |
+0 | A |
+0 | B |
+0 | C |
+0 | D |
+0 | E |
+0 | F |
+
+### Tabla 2. Mensajes del estado del VN300.
+data 1 | data 2 | message | meaning | R | G | B |LED
+-- | -- | -- | -- | -- | -- | -- |--
+1 | 0 |         |Reserve|0|0|0|L1
+1 | 1 | VN300-NC |	VN300 No Connected|240|0|0|L1
+1 | 2 | VN300-Start |VN 300 Starting|240|128|0|L1
+1 | 3 | VN300-<25 | VN300 <25%|50|0|240|L1
+1 | 4 | VN300-<50 |25% < VN300 <50%|50|80|160|L1
+1 | 5 | VN300-<75 |	50% < VN300 <75|50|160|80|L1
+1 | 6 | VN300->75 |VN300 >75%|50|240|0|L1
+1 | 7 |VN300-Work | VN300 Working|0|240|0|L1
+1 | 8 |
+1 | 9 |
+1 | A |
+1 | B |
+1 | C |
+1 | D |
+1 | E |
+1 | F |
+
+### Tabla 3. Mensajes del estado del LiDAR M8.
+data 1 | data 2 | message | meaning | R | G | B |LED
+-- | -- | -- | -- | -- | -- | -- | --
+2 | 0 |         |Reserve|0|0|0|L2
+2 | 1 | M8-NC |	M8 No Ping|240	|0|0|L2
+2 | 2 | M8-Start |M8 Starting|240|128|0|L2
+2 | 3 |
+2 | 4 |
+2 | 5 |
+2 | 6 |
+2 | 7 |M8-Work | M8 Working|0|240|0 |L2
+2 | 8 |
+2 | 9 |
+2 | A |
+2 | B |
+2 | C |
+2 | D |
+2 | E |
+2 | F |
+### Tabla 4. Mensajes del estado de la camara.
+data 1 | data 2 | message | meaning
+-- | -- | -- | --
+3 | 0 |         |Reserve
+3 | 1 | CAM-NC | CAM No Connected
+3 | 2 | CAM-Start |CAM Starting
+3 | 3 |  |
+3 | 4 |  |
+3 | 5 |  |
+3 | 6 |  |
+3 | 7 |CAM-Work | CAM Working
+3 | 8 |
+3 | 9 |
+3 | A |
+3 | B |
+3 | C |
+3 | D |
+3 | E |
+3 | F |
+### Tabla 5. Mensajes del control Fuzzy para temperatura.
+data 1 | data 2 | message | meaning | R | G | B|LED
+-- | -- | -- | -- | -- | -- | -- |--
+3 | 0 |  |Reserve|0|0|0|L4
+3 | 1 |   
+3 | 2 |  
+3 | 3 |  
+3 | 4 |  
+3 | 5 |  
+3 | 6 |  
+3 | 7 |   
+3 | 8 |
+3 | 9 |
+3 | A |
+3 | B |
+3 | C |FUZZ-T1|>25°|13	|0|	125|L4
+3 | D |FUZZ-T2|>30°|113|	0|	125|L4
+3 | E |FUZZ-T3|>35°|255|	128|	0|L4
+3 | F |FUZZ-T4|>40°|250|0|	0|L4
+### Tabla 6. Mensajes de error de memoria.
+data 1 | data 2 | message | meaning | R | G | B |LED
+-- | -- | -- | -- | -- | -- | -- | --
+A | 0 |  |Reserve|0|0|0|L3
+A | 1 | memo-RAM_E1 |RAM alert1|255|64|64|L3
+A | 2 | memo-RAM_E2 |RAM alert2|255|0|0|L3
+A | 3 |
+A | 4 |
+A | 5 |
+A | 6 | memo-ROM_E1 |ROM alert1|64|133|255 |L3
+A | 7 | memo-ROM_E2 |ROM alert2|64|64|255|L3
+A | 8 | memo-ROM_E3 |ROM alert3|0|0|255|L3
+A | 9 |
+A | A |
+A | B |
+A | C |
+A | D |
+A | E |
+A | F |
+
 ##### Protocolo de envio desde el dsPIC
 Este protocolo se construye a partir de una tabla de valores constantes y los datos numericos codificados en hexadecimal, que informan al computador sobre las variables medidas por el microcontrolador. Dicho protocolo consta de tres Bytes que codifican la información, los cuales son enviados al computador para ponerlo en conocimiento de los valores numericos de las variables fundamentales para el funcionameinto de las tarjetas.
 
@@ -69,138 +196,7 @@ El primer Byte corresponde al tipo de información (**command**) como corrientes
   checksum =   0x16
   mensaje =    '$868374\n'
   ~~~
-#### Tabla de los mensajes del sistema
-
-data 1 | data 2 | message | meaning| R | G | B
--- | -- | -- | -- | -- | -- | -- 
-0 | 0 |         |Reserve|0|0|0
-0 | 1 | sys-on_24 |	Turn-on source 24V
-0 | 2 | sys-off_12 |Turn-off source 12V
-0 | 3 | sys-off_24 |Turn-off source 24V
-0 | 4 | sys-mem_E |	Memory problem
-0 | 5 | sys-on_m8 |	Turn LiDAR on
-0 | 6 | sys-on_tty |Turn all tty ports on
-0 | 7 |
-0 | 8 |
-0 | 9 |
-0 | A |
-0 | B |
-0 | C |
-0 | D |
-0 | E |
-0 | F |
-
-### Tabla del VN300
-data 1 | data 2 | message | meaning | R | G | B |N/LED
--- | -- | -- | -- | -- | -- | -- |--
-1 | 0 |         |Reserve|0|0|0
-1 | 1 | VN300-NC |	VN300 No Connected|240|0|0|L1
-1 | 2 | VN300-Start |VN 300 Starting|240|128|0|L1
-1 | 3 | VN300-<25 | VN300 <25%|50|0|240|L1
-1 | 4 | VN300-<50 |25% < VN300 <50%|50|80|160|L1
-1 | 5 | VN300-<75 |	50% < VN300 <75|50|160|80|L1
-1 | 6 | VN300->75 |VN300 >75%|50|240|0|L1
-1 | 7 |VN300-Work | VN300 Working|0|240|0|L1
-1 | 8 |
-1 | 9 |
-1 | A |
-1 | B |
-1 | C |
-1 | D |
-1 | E |
-1 | F |
-
-### Tabla del M8 LiDAR
-data 1 | data 2 | message | meaning | R | G | B |N/LED
--- | -- | -- | -- | -- | -- | -- | --
-2 | 0 |         |Reserve|0|0|0
-2 | 1 | M8-NC |	M8 No Ping|240	|0|0|L2
-2 | 2 | M8-Start |M8 Starting|240|128|0|L2
-2 | 3 |  | ||||L2
-2 | 4 |  | ||||L2
-2 | 5 |  | ||||L2
-2 | 6 |  | ||||L2
-2 | 7 |M8-Work | M8 Working|0|240|0 |L2
-2 | 8 |
-2 | 9 |
-2 | A |
-2 | B |
-2 | C |
-2 | D |
-2 | E |
-2 | F |
-### Tabla de la Camara
-data 1 | data 2 | message | meaning | R | G | B
--- | -- | -- | -- | -- | -- | -- 
-3 | 0 |         |Reserve|0|0|0
-3 | 1 | CAM-NC | CAM No Connected
-3 | 2 | CAM-Start |CAM Starting
-3 | 3 |  |
-3 | 4 |  |
-3 | 5 |  |
-3 | 6 |  |
-3 | 7 |CAM-Work | CAM Working
-3 | 8 |
-3 | 9 |
-3 | A |
-3 | B |
-3 | C |
-3 | D |
-3 | E |
-3 | F |
-### Tabla de Fuzzi-Temp
-data 1 | data 2 | message | meaning | R | G | B
--- | -- | -- | -- | -- | -- | -- 
-3 | 0 |  |Reserve|0|0|0
-3 | 1 |   
-3 | 2 |  
-3 | 3 |  
-3 | 4 |  
-3 | 5 |  
-3 | 6 |  
-3 | 7 |   
-3 | 8 |
-3 | 9 |
-3 | A |
-3 | B |
-3 | C |FUZZ-T1|>25°|13	|0|	125
-3 | D |FUZZ-T2|>30°|113|	0|	125
-3 | E |FUZZ-T3|>35°|255|	128|	0
-3 | F |FUZZ-T4|>40°|250|0|	0
-### Tabla errores de memoria
-data 1 | data 2 | message | meaning | R | G | B |N/LED
--- | -- | -- | -- | -- | -- | -- | --
-A | 0 |  |Reserve|0|0|0
-A | 1 | memo-RAM_E1 |RAM alert1|255|64|64|L3
-A | 2 | memo-RAM_E2 |RAM alert2|255|0|0|L3
-A | 3 |  |||||L3
-A | 4 |  |||||L3
-A | 5 |  |||||L3
-A | 6 | memo-ROM_E1 |ROM alert1|64|133|255 |L3
-A | 7 | memo-ROM_E2 |ROM alert2|64|64|255|L3
-A | 8 | memo-ROM_E3 |ROM alert3|0|0|255|L3
-A | 9 |
-A | A |
-A | B |
-A | C |
-A | D |
-A | E |
-A | F |
-
-#### Comunicacion Micro-NUC
-Este protocolo consta de tres Bytes y dos modos de funcionamiento. El primer modo (Modo 1) consiste en enviar la informacion adquirida por los sensores, mientras que el segundo modo (Modo 2) envia comandos de sistema que la NUC debe ejecutar. Ademas el primer modo se puede subdividir de igual forma en dos tipos, estos estan estructurados como:
-##### Modo 1.a
-Este modo corresponde cuando el valor a enviar es inferior a 16.0, por lo tanto el orden del menseja es tal que:
-* El primer Byte indica la variable a transmitir
-* El segundo Byte corresponde a la parte entera del valor a enviar
-* El tercer Byte corresponde a la parte decimal del valor a enviar
-##### Modo 1.b
-Este modo corresponde cuando el valor a enviar es superior a 16
-* El primer Byte indica la variable a transmitir
-* El segundo Byte y el tercer Byte corresponden a un numero entero de dos Bytes(en un rango de 0 a 255) el cual corresponde al valor a enviar
-
-Este protocolo posee un mensaje de error en los perifericos o el sistema cuando Command, data1 y data2 son 0 (Cero).
-#### Tabla 1
+#### Tabla 7. Variables medidas codificadas.
    
 Command|	data1|	data2|	meaning|
 |--|--|--|--|
@@ -218,10 +214,8 @@ A|	x|	y|	Temperature dsPIC|
 B|	x|	y|	Temperature DC|
 C|	x|	y|	Temperature xx|
 D|	x|	y|	Hight|
-#### Modo 2
-* El primer Byte que es 'F', indica un mensaje de tipo instruccion para la NUC
-* El segundo y el tercero corresponden a un codificacion de diferentes tipos de acciones que se puede solicitar desde el microcontrolador a la NUC.
-#### Tabla 2
+
+#### Tabla 8. Estado de los modulos del sistema.
 |Command|	data1|	data2|	meaning|
 |--|--|--|--|
 |F	|0	|0	|Reserved|
