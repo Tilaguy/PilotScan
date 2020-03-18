@@ -6,7 +6,7 @@ En construccion
 
 En este repositorio se encuentran alojados los algoritmos necesarios para elaborar una interface de comunicación codificada con capacidad de detección de errores, durante el proceso de envío. Esta interfaz hace parte del sistema titulado **PilotScan\***, el cual consta de un sistema central de procesamiento y un sistema de respaldo que monitora de forma continua, el estado del sistema tanto a nivel hardware como software, además tiene la capacidad de realizar acciones indicadas por sistema central, sobre los diferentes módulos que conforman el sistema.
 
-Para el sistema central de procesamiento, se usa una **Intel®️ NUC Board** con linux 16.04 server. Para el sistema de respaldo se emplea un **dsPIC 30F4011**, el cual conecta diferentes sensores analogicos y digitales, tiene la capacidad de habilitar y deshabilitar fuentes reguladas de *12 V* y *24 V*, además de emitir mensajes al usuario a través de una bocina y LEDs RGB programables.
+Para el sistema central de procesamiento, se usa una **Intel®️ NUC Board** con linux 16.04 server. Para el sistema de respaldo se emplea un **dsPIC 30F4011**, el cual conecta diferentes sensores analógicos y digitales, tiene la capacidad de habilitar y deshabilitar fuentes reguladas de *12 V* y *24 V*, además de emitir mensajes al usuario a través de una bocina y LEDs RGB programables.
 
 **\*** La información detallada del sistema se encuentra alojada en el repositorio: \ link \
 
@@ -14,7 +14,7 @@ Para el sistema central de procesamiento, se usa una **Intel®️ NUC Board** co
 ### Software Installation
 
 ##### System_monitor Installation
-Insatalacion del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
+Insatalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
 
 Dentro de la carpeta src del workspace, se debe descargar el *system_monitor* usando la siguiente instrucción:
 ~~~
@@ -29,21 +29,21 @@ Luego, se compila en el workspace y se asigna el directorio *devel*,
 $ catkin_make
 $ source devel/setup.bash
 ~~~
-Por ultimo, para lanzar el nodo se usa la instrucción:
+Por último, para lanzar el nodo se usa la instrucción:
 ~~~
 $ roslaunch system_monitor system_monitor.launch
 ~~~
 ### Comunicación serial **computador-dsPIC**
-El protocolo que se usa para la comunicación entre el microcontrolador y el computador, genera un numero que codifica la información en hexadecimal, esta codificación depende de quien es emisor del mensaje, esta codificacion se explica mas detalladamente a continuación. Ademas, el protocolo cuenta con un Byte de inicio (*'$'*) que indical el comienzo del mensaje y un salto de linea (*'\n'*) que informa el final. En cualquier caso, si los Bytes de información toman los valores de 0, significa un error en la codificación.
+El protocolo que se usa para la comunicación entre el microcontrolador y el computador, genera un número que codifica la información en hexadecimal, esta codificación depende de quién es emisor del mensaje, esta codificación se explica más detalladamente a continuación. Además, el protocolo cuenta con un Byte de inicio (*'$'*) que indica el comienzo del mensaje y un salto de línea (*'\n'*) que informa el final. En cualquier caso, si los Bytes de información toman los valores de 0, significa un error en la codificación.
 
-##### Protocolo de envio desde la Intel® NUC Board
-Este protocolo se construye a partir de una tabla de valores constantes, los cuales indican el estado del sistema en diferentes ambitos tales como: monitoreo y control de las funtes, el cominicacion de problemas de ejecucion y otros requerimientos necesarios para el correcto funcionamiento del sistema. Dicho protocolo consta de dos Byte, los cuales codifican la informacion.
+##### Protocolo de envió desde la Intel® NUC Board
+Este protocolo se construye a partir de una tabla de valores constantes, los cuales indican el estado del sistema en diferentes ámbitos tales como: monitoreo y control de las fuentes, la comunicación de problemas de ejecución y otros requerimientos necesarios para el correcto funcionamiento del sistema. Dicho protocolo consta de dos Byte, los cuales codifican la información.
 
-El primer Byte (**data1**) indica el origen de la informacion (VN-300, Lidar, estado del sistema, etc) de la cual se esta dando a conocer su estado. El segundo Byte (**data2**) informa el estado y da idea de como debe proceder el microcontrolador. Los dos Bytes restantes corresponden al checksum, quien funciona como sistema de deteccion de errores en el proceso de comunicacion, pues dichos Bytes deben corresponden a la suma de los dos primeros (**dato1+dato2**).
+El primer Byte (**data1**) indica el origen de la información (VN-300, Lidar, estado del sistema, etc) de la cual se está dando a conocer su estado. El segundo Byte (**data2**) informa el estado y da idea de cómo debe proceder el microcontrolador. Los dos Bytes restantes corresponden al checksum, quien funciona como sistema de detección de errores en el proceso de comunicación, pues dichos Bytes deben corresponden a la suma de los dos primeros (**dato1+dato2**).
 
-Cada mensaje es interpretado por el microcontrolador quien efectua algun tipo de acción, ya sea realizando un encendido o apagado de algun elemento, acivando alertas auditivas o alertas visuales a travez de LEDs RGB.
+Cada mensaje es interpretado por el microcontrolador quien efectúa algún tipo de acción, ya sea realizando un encendido o apagado de algún elemento, activando alertas auditivas o alertas visuales a través de LEDs RGB.
 
-* **P. ej.** Si la *temperatura media de los nucleos del sistema de computo* esta entre 35 °C y 40 °C, en microcontrolador debe *encender los ventiladores* en cierta forma particular.
+* **P. ej.** Si la *temperatura media de los núcleos del sistema de cómputo* esta entre 35 °C y 40 °C, en microcontrolador debe *encender los ventiladores* en cierta forma particular.
   * Mensaje enviado:
   ~~~
   data1 =      0x4
@@ -173,13 +173,14 @@ A | C |
 A | D |
 A | E |
 A | F |
+##### Protocolo de envió desde el dsPIC
+Este protocolo se construye a partir de una tabla de valores constantes y los datos numéricos codificados en hexadecimal, que informan al computador sobre las variables medidas por el microcontrolador. Dicho protocolo consta de tres Bytes que codifican la información, los cuales son enviados al computador para ponerlo en conocimiento de los valores numéricos de las variables fundamentales para el funcionamiento de las tarjetas.
 
-##### Protocolo de envio desde el dsPIC
-Este protocolo se construye a partir de una tabla de valores constantes y los datos numericos codificados en hexadecimal, que informan al computador sobre las variables medidas por el microcontrolador. Dicho protocolo consta de tres Bytes que codifican la información, los cuales son enviados al computador para ponerlo en conocimiento de los valores numericos de las variables fundamentales para el funcionameinto de las tarjetas.
 
-El primer Byte corresponde al tipo de información (**command**) como corrientes, voltajes, etc, y su origen. Los siguientes dos Bytes son la información numerica codificada (**data1**, **data2**), la cual puede ser entera o flotante. Adicionalmente, existen dos Bytes corresponden al checksum, el cual permite verificar la información transmitida como protocolo de detección de errores y ademas permite conocer si el dato numerico enviado es un enetero con rango [0, 255] (**command+data1+data2+0x05**), o un flotante con una cifra decimal de precisión (**command+data1+data2**).
+El primer Byte corresponde al tipo de información (**command**) como corrientes, voltajes, etc, y su origen. Los siguientes dos Bytes son la información numérica codificada (**data1**, **data2**), la cual puede ser entera o flotante. Adicionalmente, existen dos Bytes corresponden al checksum, el cual permite verificar la información transmitida como protocolo de detección de errores y además permite conocer si el dato numérico enviado es un entero con rango [0, 255] (**command+data1+data2+0x05**), o un flotante con una cifra decimal de precisión (**command+data1+data2**).
 
-* **P. ej.** La *corriente proveniente de la fuente de 5 V* medida por el sensor es de *0.45 A*, a su vez *el altimetro* detecta una altura de *64 m*.
+
+* **P. ej.** La *corriente proveniente de la fuente de 5 V* medida por el sensor es de *0.45 A*, a su vez *el altímetro* detecta una altura de *64 m*.
   * Mensaje 1 enviado:
   ~~~
   Command =    0x1
@@ -215,7 +216,7 @@ B|	x|	y|	Temperature DC|
 C|	x|	y|	Temperature xx|
 D|	x|	y|	Hight|
 
-#### Tabla 8. Estado de los modulos del sistema.
+#### Tabla 8. Estado de los módulos del sistema.
 |Command|	data1|	data2|	meaning|
 |--|--|--|--|
 |F	|0	|0	|Reserved|
@@ -233,7 +234,7 @@ D|	x|	y|	Hight|
 |F	|4	|4	|turn ROS on|
 
 ## Repository Folders
-Para el proyecto usamos algunas librerias.
+Para el proyecto usamos algunas librerías.
 ### PIC
 * Timer.c
 
@@ -268,9 +269,9 @@ Es un nodo que simula la ejecución del vn_300 publicado la información mediant
 * ws2815b.C
 
 ####  I2C_DIR
-La comunicación con algunos sensores se hace mediante el protocolo I2C y este  se encuentra en un pin específico que se encuentra en la hoja de datos del producto, así mismo  el puerto del micro de I2C debe ir a un el mux pues se necesita enviar y recibir datos de varios sensores.
+La comunicación con algunos sensores se hace mediante el protocolo I2C y este se encuentra en un pin específico que se encuentra en la hoja de datos del producto, así mismo el puerto del micro de I2C debe ir a un el mux pues se necesita enviar y recibir datos de varios sensores.
 #### Max17055.h
-Esta librería se usa para tomar la lectura del estado actual de la batería y además hacer una copia de respaldo de las mediciones.Esta librería se usa para tomar la lectura del estado actual de la batería y además hacer una copia de respaldo de las mediciones, de igual manera esta librería se basó en Max17055.bank y Max17055.cpp. 
+Esta librería se usa para tomar la lectura del estado actual de la batería y además hacer una copia de respaldo de las mediciones. Está librería se usa para tomar la lectura del estado actual de la batería y además hacer una copia de respaldo de las mediciones, de igual manera esta librería se basó en Max17055.bank y Max17055.cpp. 
 #### Notas.C
 Esta librería se usa para definir el tiempo de una nota usada por el Buzzer en el sistema.
 #### Nuc_interface.h
@@ -287,11 +288,5 @@ Esta librería es usada para la comunicación del micro con la NUC la cual fue e
 Esta librería es usada para el funcionamiento del LED ws2815b escogiendo un color dentro del espectro RGB.
 
 ### Authors.
-
-
-
-
-
-
 
 
