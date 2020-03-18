@@ -213,6 +213,10 @@ Los siguientes archivos son nodos los cuales publican su información por medio 
 * Resources.py
 * Sim_vn300.py
 * Prueba_serial_dspic.py
+
+#### Sim_vn300.py
+Es un nodo que simula la ejecución del vn_300 publicado la información mediante un tópico con su mismo nombre   
+
 ### DSPIC
 * I2C_DIR
 * Max17055.bak
