@@ -25,20 +25,50 @@ Por ultimo, para lanzar el nodo se usa la instrucción:
 $ roslaunch system_monitor system_monitor.launch
 ~~~
 ### Comunicación serial **computador-dsPIC**
-El protocolo que se usa para la comunicación entre el microcontrolador y el computador, genera un numero que codifica la información en hexadecimal, esta codificación depende de quien es transmisor, la cual se explica a continuación. Ademas, el protocolo cuenta con un Byte de inicio (*$*) que indical el comienzo del mensaje y un salto de linea (*\n*) que informa el final.
+El protocolo que se usa para la comunicación entre el microcontrolador y el computador, genera un numero que codifica la información en hexadecimal, esta codificación depende de quien es emisor del mensaje, esta codificacion se explica mas detalladamente a continuación. Ademas, el protocolo cuenta con un Byte de inicio (*'$'*) que indical el comienzo del mensaje y un salto de linea (*'\n'*) que informa el final. En cualquier caso, si los Bytes de información toman los valores de 0, significa un error en la codificación.
 
 ##### Protocolo de envio desde la Intel® NUC Board
-Su protocolo se construye a partir de una tabla de valores constantes, los cuales indican el estado del sistema en diferentes ambitos tales como: monitoreo y control de las funtes, el cominicacion de problemas de ejecucion y otros requerimientos necesarios para el correcto funcionamiento del sistema. Dicho protocolo consta de dos Byte, los cuales codifican la informacion.
+Este protocolo se construye a partir de una tabla de valores constantes, los cuales indican el estado del sistema en diferentes ambitos tales como: monitoreo y control de las funtes, el cominicacion de problemas de ejecucion y otros requerimientos necesarios para el correcto funcionamiento del sistema. Dicho protocolo consta de dos Byte, los cuales codifican la informacion.
 
-El primer Byte (data 1) indica el origen de la informacion (VN-300, Lidar, estado del sistema, etc) de la cual se esta dando a conocer su estado. El segundo Byte (data 2) informa el estado y da idea de como actuar al microcontrolador. Los dos Bytes restantes (Checksum)
+El primer Byte (**data1**) indica el origen de la informacion (VN-300, Lidar, estado del sistema, etc) de la cual se esta dando a conocer su estado. El segundo Byte (**data2**) informa el estado y da idea de como debe proceder el microcontrolador. Los dos Bytes restantes corresponden al checksum, quien funciona como sistema de deteccion de errores en el proceso de comunicacion, pues dichos Bytes deben corresponden a la suma de los dos primeros (**dato1+dato2**).
 
-**P. ej.** Si la *temperatura media de los nucleos del sistema de computo* es alta, en microcontrolador debe *encender los ventiladores* e cierta forma particular, lo que codificado en el protocolo se interpreta como:
+Cada mensaje es interpretado por el microcontrolador quien efectua algun tipo de acción, ya sea realizando un encendido o apagado de algun elemento, acivando alertas auditivas o alertas visuales a travez de LEDs RGB.
 
-sin embargo cuando data1 y data2 son 0 (cero) significa un error en el periferico, de igual manera el error es emitido por medio de un led RGB el cual se ha asignado un color especifico dependiedo del error y su color se especifica en cada tabla.
+* **P. ej.** Si la *temperatura media de los nucleos del sistema de computo* esta entre 35 °C y 40 °C, en microcontrolador debe *encender los ventiladores* en cierta forma particular.
+  * Mensaje enviado:
+  ~~~
+  data1 =      0x4
+  data2 =      0xE
+  checksum =   0x12
+  mensaje =    '$19986\n'
+  ~~~
+  * Acción tomada por el microcontrolador:
+  ~~~
+  - Encendido de ventidador ( PWM ~ 60% )
+  - LED RGB 4 ([R,G,B] = [25,128,0])
+  ~~~
+##### Protocolo de envio desde el dsPIC
+Este protocolo se construye a partir de una tabla de valores constantes y los datos numericos codificados en hexadecimal, que informan al computador sobre las variables medidas por el microcontrolador. Dicho protocolo consta de tres Bytes que codifican la información, los cuales son enviados al computador para ponerlo en conocimiento de los valores numericos de las variables fundamentales para el funcionameinto de las tarjetas.
 
-##### rotocolo de envio desde el dsPIC
-El dato llega como un entero codificado de 4 (cuatro) Bytes, los primeros 2 (dos) Bytes son la informacion codificada mientras que los otros 2 (dos) Bytes corresponden a Bytes de verificacion llamados checksum, estos corresponden a la suma de los 2 (dos) primeros Bytes, esto con el objetivo de verificar que la informacion recibida corresponde efectivamente a la enviada por la NUC.
+El primer Byte corresponde al tipo de información (**command**) como corrientes, voltajes, etc, y su origen. Los siguientes dos Bytes son la información numerica codificada (**data1**, **data2**), la cual puede ser entera o flotante. Adicionalmente, existen dos Bytes corresponden al checksum, el cual permite verificar la información transmitida como protocolo de detección de errores y ademas permite conocer si el dato numerico enviado es un enetero con rango [0, 255] (**command+data1+data2+0x05**), o un flotante con una cifra decimal de precisión (**command+data1+data2**).
 
+* **P. ej.** La *corriente proveniente de la fuente de 5 V* medida por el sensor es de *0.45 A*, a su vez *el altimetro* detecta una altura de *64 m*.
+  * Mensaje 1 enviado:
+  ~~~
+  Command =    0x1
+  data1 =      0x0
+  data2 =      0x4
+  checksum =   0x05
+  mensaje =    '$66565\n'
+  ~~~
+  * Mensaje 2 enviado:
+  ~~~
+  Command =    0xD
+  data1 =      0x4
+  data2 =      0x0
+  checksum =   0x16
+  mensaje =    '$868374\n'
+  ~~~
 #### Tabla de los mensajes del sistema
 
 data 1 | data 2 | message | meaning| R | G | B
