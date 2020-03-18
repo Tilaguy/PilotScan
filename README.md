@@ -212,8 +212,12 @@ Los siguientes archivos son nodos los cuales publican su información por medio 
 * Monitoring.py
 * Resources.py
 * Sim_vn300.py
-* Prueba_serial_dspic.py
-
+#### Firmware.py
+Es un nodo que se encarga de la comunicación serial con el dspic.
+#### Monitoring.py
+Es nodo que se encarga de la interpretación del formato de protocolo NUC Dspic explicado anteriormente 
+#### Resources.py
+Es un nodo el cual lee la información del sistema y la publica por medio de tópicos estado de memoria, temperatura de los núcleos y demás.  
 #### Sim_vn300.py
 Es un nodo que simula la ejecución del vn_300 publicado la información mediante un tópico con su mismo nombre   
 
