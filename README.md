@@ -70,7 +70,7 @@ Cada mensaje es interpretado por el microcontrolador quien efectúa algún tipo 
   - Encendido de ventilador ( PWM ~ 60% )
   - LED RGB 4 ([R,G,B] = [25,128,0])
   ~~~
-#### Tabla 1. Mensajes del sistema.
+#### Tabla 3.1.1. Mensajes del sistema.
 
 data 1 | data 2 | message | meaning
 -- | -- | -- | -- 
@@ -91,7 +91,7 @@ data 1 | data 2 | message | meaning
 0 | E |
 0 | F |
 
-#### Tabla 2. Mensajes del estado del VN300.
+#### Tabla 3.1.2. Mensajes del estado del VN300.
 data 1 | data 2 | message | meaning | R | G | B |LED
 -- | -- | -- | -- | -- | -- | -- |--
 1 | 0 |         |Reserve|0|0|0|L1
@@ -111,7 +111,7 @@ data 1 | data 2 | message | meaning | R | G | B |LED
 1 | E |
 1 | F |
 
-#### Tabla 3. Mensajes del estado del LiDAR M8.
+#### Tabla 3.1.3. Mensajes del estado del LiDAR M8.
 data 1 | data 2 | message | meaning | R | G | B |LED
 -- | -- | -- | -- | -- | -- | -- | --
 2 | 0 |         |Reserve|0|0|0|L2
@@ -130,7 +130,7 @@ data 1 | data 2 | message | meaning | R | G | B |LED
 2 | D |
 2 | E |
 2 | F |
-#### Tabla 4. Mensajes del estado de la cámara.
+#### Tabla 3.1.4. Mensajes del estado de la cámara.
 data 1 | data 2 | message | meaning
 -- | -- | -- | --
 3 | 0 |         |Reserve
@@ -149,7 +149,7 @@ data 1 | data 2 | message | meaning
 3 | D |
 3 | E |
 3 | F |
-#### Tabla 5. Mensajes del control Fuzzy para temperatura.
+#### Tabla 3.1.5. Mensajes del control Fuzzy para temperatura.
 data 1 | data 2 | message | meaning | R | G | B|LED
 -- | -- | -- | -- | -- | -- | -- |--
 3 | 0 |  |Reserve|0|0|0|L4
@@ -168,7 +168,7 @@ data 1 | data 2 | message | meaning | R | G | B|LED
 3 | D |FUZZ-T2|>30°|113|	0|	125|L4
 3 | E |FUZZ-T3|>35°|255|	128|	0|L4
 3 | F |FUZZ-T4|>40°|250|0|	0|L4
-#### Tabla 6. Mensajes de error de memoria.
+#### Tabla 3.1.6. Mensajes de error de memoria.
 data 1 | data 2 | message | meaning | R | G | B |LED
 -- | -- | -- | -- | -- | -- | -- | --
 A | 0 |  |Reserve|0|0|0|L3
@@ -187,7 +187,7 @@ A | C |
 A | D |
 A | E |
 A | F |
-### 3.2. Protocolo de envió desde el dsPIC
+### 3.2. Protocolo de envío desde el dsPIC
 Este protocolo se construye a partir de una tabla de valores constantes y los datos numéricos codificados en hexadecimal, que informan al computador sobre las variables medidas por el microcontrolador. Dicho protocolo consta de tres Bytes que codifican la información, los cuales son enviados al computador para ponerlo en conocimiento de los valores numéricos de las variables fundamentales para el funcionamiento de las tarjetas.
 
 El primer Byte corresponde al tipo de información (**command**) como corrientes, voltajes, etc., y su origen. Los siguientes dos Bytes son la información numérica codificada (**data1**, **data2**), la cual puede ser entera o flotante. Adicionalmente, existen dos Bytes corresponden al checksum, el cual permite verificar la información transmitida como protocolo de detección de errores y además permite conocer si el dato numérico enviado es un entero con rango [0, 255] (**command+data1+data2+0x05**), o un flotante con una cifra decimal de precisión (**command+data1+data2**).
@@ -210,7 +210,7 @@ El primer Byte corresponde al tipo de información (**command**) como corrientes
   checksum =   0x16
   mensaje =    '$868374\n'
   ~~~
-#### Tabla 7. Variables medidas codificadas.
+#### Tabla 3.2.1. Variables medidas codificadas.
    
 Command|	data1|	data2|	meaning|
 |--|--|--|--|
@@ -229,7 +229,7 @@ B|	x|	y|	Temperature DC|
 C|	x|	y|	Temperature xx|
 D|	x|	y|	Hight|
 
-#### Tabla 8. Estado de los módulos del sistema.
+#### Tabla 3.2.2. Estado de los módulos del sistema.
 |Command|	data1|	data2|	meaning|
 |--|--|--|--|
 |F	|0	|0	|Reserved|
