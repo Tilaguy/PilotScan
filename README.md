@@ -2,7 +2,7 @@
 ---
 En construccion
 ---
-### Descripción
+### 1. Descripción
 
 En este repositorio se encuentran alojados los algoritmos necesarios para elaborar una interface de comunicación codificada con capacidad de detección de errores, durante el proceso de envío. Esta interfaz hace parte del sistema titulado **PilotScan\***, el cual consta de un sistema central de procesamiento y un sistema de respaldo que monitora de forma continua, el estado del sistema tanto a nivel hardware como software, además tiene la capacidad de realizar acciones indicadas por sistema central, sobre los diferentes módulos que conforman el sistema.
 
@@ -11,29 +11,33 @@ Para el sistema central de procesamiento, se usa una **Intel®️ NUC Board** co
 **\*** La información detallada del sistema se encuentra alojada en el repositorio: \ link \
 
 ---
-### Software Installation
+## 2. Repository organization
+Este repositorio se encuentra organizado de la siguiente forma:
 
-##### System_monitor Installation
-Insatalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
+### 2.1. PIC
+* *Timer.c*:  Esta archivo genera un reloj a frecuencia constante en un microcontrolador **PIC 16f506**, el cual sirve como base de tiempo para garantizar que el sistema de firmware esta en funcionamiento.
+### 2.2. Python
+Estos archivos son nodos para ROS, los cuales interacturan entre si por medio de topicos para el monitoreo, procesamiento y acción sobre los diferentes modulos que conforman el sistema **PilotScan**.
+* *Firmware.py*:  Nodo encargado de la recepcion y transmision serial con el sistema de respaldo.
+* *Monitoring.py*:  Nodo encargado del procesamiento, codificación y decodificación de la información mediante protocolos diseñados para cada caso especifico.
+* *Resources.py*:  Nodo que lee la información del estado del sistema y la publica por medio de tópicos separados como el estado de memoria, la temperatura de los núcleos y entre otros.
 
-Dentro de la carpeta src del workspace, se debe descargar el *system_monitor* usando la siguiente instrucción:
-~~~
-$ git clone https://github.com/RobotnikAutomation/system_monitor
-~~~
-Es necesario instalar algunas dependencias adicionales para su ejecución,
-~~~
-$ sudo apt-get install sysstat ifstat ntpdate
-~~~
-Luego, se compila en el workspace y se asigna el directorio *devel*,
-~~~
-$ catkin_make
-$ source devel/setup.bash
-~~~
-Por último, para lanzar el nodo se usa la instrucción:
-~~~
-$ roslaunch system_monitor system_monitor.launch
-~~~
-### Comunicación serial **computador-dsPIC**
+### 2.3. dsPIC
+#### 2.3.1. Include
+* *ports.h*:  Librería para hacer asignaciones de pines segun su uso y declaracion de variables globales.
+* *NOTAS.C*:  Librería para definir el tiempo de una nota usada por el Buzzer en el sistema.
+* *TONOS.C*:  Librería donde se definen las notas musicales separado por octavas en 4 grupos de frecuencias diferentes.
+* *SerialProtocol.h*:  Librería encargada de la codificación y decodificación de la información mediante protocolos diseñados para cada caso especifico.
+* *Hadware_actions.h*:  Librería usada para generar acciónes o notificaciones del estado del sistema mediante el buzzer o los LEDs RGB.
+* *Nuc_interface.h*:  Librería usada para encender y apagar el sistema de computo central.
+* *I2C_DIR*:  Libreria que contiene las definiciones de direcciones I2C para la comunicación con algunos sensores, las funciones correspondientes para establecer dicha comunicación.
+
+#### 2.3.2. Main
+En el archivo *main.c* se hace uso de las librerias mencionadas anteriormente, se reliza la configuración de los diferentes perifericos de microcontrolador como modulo ADC, I2C, RS232, entre otors. Adicionalmente, se realiza la configuración y activación de interrupciones.
+
+---
+
+## 3. Comunicación serial **computador-dsPIC**
 El protocolo que se usa para la comunicación entre el microcontrolador y el computador, genera un número que codifica la información en hexadecimal, esta codificación depende de quién es emisor del mensaje, esta codificación se explica más detalladamente a continuación. Además, el protocolo cuenta con un Byte de inicio (*'$'*) que indica el comienzo del mensaje y un salto de línea (*'\n'*) que informa el final. En cualquier caso, si los Bytes de información toman los valores de 0, significa un error en la codificación.
 
 ##### Protocolo de envió desde la Intel® NUC Board
@@ -233,60 +237,32 @@ D|	x|	y|	Hight|
 |F	|4	|0	|turn all tty ports on|
 |F	|4	|4	|turn ROS on|
 
-## Repository Folders
-Para el proyecto usamos algunas librerías.
-### PIC
-* Timer.c
+---
 
-#### Timer.c
-Esta librería funciona como un reloj fijo.
-### Python
-Los siguientes archivos son nodos los cuales publican su información por medio de tópicos con la ayuda de la librería ROS
-* Firmware.py
-* Monitoring.py
-* Resources.py
-* Sim_vn300.py
-#### Firmware.py
-Es un nodo que se encarga de la comunicación serial con el dspic.
-#### Monitoring.py
-Es nodo que se encarga de la interpretación del formato de protocolo NUC Dspic explicado anteriormente 
-#### Resources.py
-Es un nodo el cual lee la información del sistema y la publica por medio de tópicos estado de memoria, temperatura de los núcleos y demás.  
-#### Sim_vn300.py
-Es un nodo que simula la ejecución del vn_300 publicado la información mediante un tópico con su mismo nombre   
+### Software requirements
 
-### DSPIC
-* I2C_DIR
-* Max17055.bak
-* Max17055.cpp
-* Max17055.h
-* NOTAS.C
-* Nuc_interface.h
-* TONOS.C
-* Hadware_actions.h
-* Ports.h
-* SerialProtocol.h
-* ws2815b.C
+##### System_monitor Installation
+Insatalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
 
-####  I2C_DIR
-La comunicación con algunos sensores se hace mediante el protocolo I2C y este se encuentra en un pin específico que se encuentra en la hoja de datos del producto, así mismo el puerto del micro de I2C debe ir a un el mux pues se necesita enviar y recibir datos de varios sensores.
-#### Max17055.h
-Esta librería se usa para tomar la lectura del estado actual de la batería y además hacer una copia de respaldo de las mediciones. Está librería se usa para tomar la lectura del estado actual de la batería y además hacer una copia de respaldo de las mediciones, de igual manera esta librería se basó en Max17055.bank y Max17055.cpp. 
-#### Notas.C
-Esta librería se usa para definir el tiempo de una nota usada por el Buzzer en el sistema.
-#### Nuc_interface.h
-Esta librería se usa para apagar la NUC y la batería de 12v.
-#### Tonos.C
-En esta librería usamos las notas típicas y a su vez cada nota posee 4 frecuencias distintas separadas por octavas.
-#### Hadware_actions.h
-Esta librería se usa para detectar un error en los sensores e informar mediante el buzzer o mediante el led RGB, además esta librería tiene un sonido especifico y un color especifico por el error correspondiente.
-#### Ports.h
-Esta librería se usa para definir  a que pin está conectado los periféricos.
-#### SerialProtocol.h
-Esta librería es usada para la comunicación del micro con la NUC la cual fue explicada anteriormente.
-#### ws2815b.C
-Esta librería es usada para el funcionamiento del LED ws2815b escogiendo un color dentro del espectro RGB.
+Dentro de la carpeta src del workspace, se debe descargar el *system_monitor* usando la siguiente instrucción:
+~~~
+$ git clone https://github.com/RobotnikAutomation/system_monitor
+~~~
+Es necesario instalar algunas dependencias adicionales para su ejecución,
+~~~
+$ sudo apt-get install sysstat ifstat ntpdate
+~~~
+Luego, se compila en el workspace y se asigna el directorio *devel*,
+~~~
+$ catkin_make
+$ source devel/setup.bash
+~~~
+Por último, para lanzar el nodo se usa la instrucción:
+~~~
+$ roslaunch system_monitor system_monitor.launch
+~~~
 
+---
 ### Authors.
 
 
