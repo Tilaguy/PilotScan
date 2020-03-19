@@ -251,6 +251,9 @@ D|	x|	y|	Hight|
 ### 4. Software requirements for computer
 
 --- ROS Ubuntu
+--- VN 300
+--- M8
+--- 
 
 #### 4.1. System_monitor Installation
 Instalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
