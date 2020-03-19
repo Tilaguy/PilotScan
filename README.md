@@ -1,6 +1,6 @@
 ## PILOT SCAN
 ---
-En construccion
+En construccion...
 ---
 ### 1. Descripción
 
@@ -40,7 +40,7 @@ En el archivo *main.c* se hace uso de las librerias mencionadas anteriormente, s
 ## 3. Comunicación serial **computador-dsPIC**
 El protocolo que se usa para la comunicación entre el microcontrolador y el computador, genera un número que codifica la información en hexadecimal, esta codificación depende de quién es emisor del mensaje, esta codificación se explica más detalladamente a continuación. Además, el protocolo cuenta con un Byte de inicio (*'$'*) que indica el comienzo del mensaje y un salto de línea (*'\n'*) que informa el final. En cualquier caso, si los Bytes de información toman los valores de 0, significa un error en la codificación.
 
-##### Protocolo de envió desde la Intel® NUC Board
+### 3.1. Protocolo de envió desde la Intel® NUC Board
 Este protocolo se construye a partir de una tabla de valores constantes, los cuales indican el estado del sistema en diferentes ámbitos tales como: monitoreo y control de las fuentes, la comunicación de problemas de ejecución y otros requerimientos necesarios para el correcto funcionamiento del sistema. Dicho protocolo consta de dos Byte, los cuales codifican la información.
 
 El primer Byte (**data1**) indica el origen de la información (VN-300, Lidar, estado del sistema, etc) de la cual se está dando a conocer su estado. El segundo Byte (**data2**) informa el estado y da idea de cómo debe proceder el microcontrolador. Los dos Bytes restantes corresponden al checksum, quien funciona como sistema de detección de errores en el proceso de comunicación, pues dichos Bytes deben corresponden a la suma de los dos primeros (**dato1+dato2**).
@@ -81,7 +81,7 @@ data 1 | data 2 | message | meaning
 0 | E |
 0 | F |
 
-### Tabla 2. Mensajes del estado del VN300.
+#### Tabla 2. Mensajes del estado del VN300.
 data 1 | data 2 | message | meaning | R | G | B |LED
 -- | -- | -- | -- | -- | -- | -- |--
 1 | 0 |         |Reserve|0|0|0|L1
@@ -101,7 +101,7 @@ data 1 | data 2 | message | meaning | R | G | B |LED
 1 | E |
 1 | F |
 
-### Tabla 3. Mensajes del estado del LiDAR M8.
+#### Tabla 3. Mensajes del estado del LiDAR M8.
 data 1 | data 2 | message | meaning | R | G | B |LED
 -- | -- | -- | -- | -- | -- | -- | --
 2 | 0 |         |Reserve|0|0|0|L2
@@ -120,7 +120,7 @@ data 1 | data 2 | message | meaning | R | G | B |LED
 2 | D |
 2 | E |
 2 | F |
-### Tabla 4. Mensajes del estado de la camara.
+#### Tabla 4. Mensajes del estado de la camara.
 data 1 | data 2 | message | meaning
 -- | -- | -- | --
 3 | 0 |         |Reserve
@@ -139,7 +139,7 @@ data 1 | data 2 | message | meaning
 3 | D |
 3 | E |
 3 | F |
-### Tabla 5. Mensajes del control Fuzzy para temperatura.
+#### Tabla 5. Mensajes del control Fuzzy para temperatura.
 data 1 | data 2 | message | meaning | R | G | B|LED
 -- | -- | -- | -- | -- | -- | -- |--
 3 | 0 |  |Reserve|0|0|0|L4
@@ -158,7 +158,7 @@ data 1 | data 2 | message | meaning | R | G | B|LED
 3 | D |FUZZ-T2|>30°|113|	0|	125|L4
 3 | E |FUZZ-T3|>35°|255|	128|	0|L4
 3 | F |FUZZ-T4|>40°|250|0|	0|L4
-### Tabla 6. Mensajes de error de memoria.
+#### Tabla 6. Mensajes de error de memoria.
 data 1 | data 2 | message | meaning | R | G | B |LED
 -- | -- | -- | -- | -- | -- | -- | --
 A | 0 |  |Reserve|0|0|0|L3
@@ -177,9 +177,8 @@ A | C |
 A | D |
 A | E |
 A | F |
-##### Protocolo de envió desde el dsPIC
+### 3.2. Protocolo de envió desde el dsPIC
 Este protocolo se construye a partir de una tabla de valores constantes y los datos numéricos codificados en hexadecimal, que informan al computador sobre las variables medidas por el microcontrolador. Dicho protocolo consta de tres Bytes que codifican la información, los cuales son enviados al computador para ponerlo en conocimiento de los valores numéricos de las variables fundamentales para el funcionamiento de las tarjetas.
-
 
 El primer Byte corresponde al tipo de información (**command**) como corrientes, voltajes, etc, y su origen. Los siguientes dos Bytes son la información numérica codificada (**data1**, **data2**), la cual puede ser entera o flotante. Adicionalmente, existen dos Bytes corresponden al checksum, el cual permite verificar la información transmitida como protocolo de detección de errores y además permite conocer si el dato numérico enviado es un entero con rango [0, 255] (**command+data1+data2+0x05**), o un flotante con una cifra decimal de precisión (**command+data1+data2**).
 
@@ -239,9 +238,9 @@ D|	x|	y|	Hight|
 
 ---
 
-### Software requirements
+### 4. Software requirements
 
-##### System_monitor Installation
+#### 4.1. System_monitor Installation
 Insatalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
 
 Dentro de la carpeta src del workspace, se debe descargar el *system_monitor* usando la siguiente instrucción:
@@ -263,6 +262,6 @@ $ roslaunch system_monitor system_monitor.launch
 ~~~
 
 ---
-### Authors.
+### 5. Authors.
 
 
