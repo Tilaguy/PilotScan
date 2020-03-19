@@ -47,7 +47,7 @@ En el archivo main.c se hace uso de las librerías mencionadas anteriormente, se
 
 ---
 
-## 3. Comunicación serial **computador-dsPIC**
+## 3. Protocolo de comunicación serial **computador-dsPIC**
 El protocolo que se usa para la comunicación entre el microcontrolador y el computador genera un número que codifica la información en hexadecimal, esta codificación depende de quién es emisor del mensaje, esta codificación se explica más detalladamente a continuación. Además, el protocolo cuenta con un Byte de inicio (*'$'*) que indica el comienzo del mensaje y un salto de línea (*'\n'*) que informa el final. En cualquier caso, si los Bytes de información toman los valores de 0, significa un error en la codificación.
 
 ### 3.1. Protocolo de envió desde la Intel® NUC Board
@@ -248,7 +248,9 @@ D|	x|	y|	Hight|
 
 ---
 
-### 4. Software requirements
+### 4. Software requirements for computer
+
+--- ROS Ubuntu
 
 #### 4.1. System_monitor Installation
 Instalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
