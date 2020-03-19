@@ -4,9 +4,9 @@ En construccion...
 ---
 ### 1. Descripción
 
-En este repositorio se encuentran alojados los algoritmos necesarios para elaborar una interface de comunicación codificada con capacidad de detección de errores, durante el proceso de envío. Esta interfaz hace parte del sistema titulado **PilotScan\***, el cual consta de un sistema central de procesamiento y un sistema de respaldo que monitora de forma continua, el estado del sistema tanto a nivel hardware como software, además tiene la capacidad de realizar acciones indicadas por sistema central, sobre los diferentes módulos que conforman el sistema.
+En este repositorio se encuentran alojados los algoritmos necesarios para elaborar una interfaz de comunicación codificada con capacidad de detección de errores, durante el proceso de envío. Esta interfaz hace parte del sistema titulado **PilotScan\***, el cual consta de un sistema central de procesamiento y un sistema de respaldo que monitora de forma continua, el estado del sistema tanto a nivel hardware como software, además tiene la capacidad de realizar acciones indicadas por sistema central, sobre los diferentes módulos que conforman el sistema.
 
-Para el sistema central de procesamiento, se usa una **Intel®️ NUC Board** con linux 16.04 server. Para el sistema de respaldo se emplea un **dsPIC 30F4011**, el cual conecta diferentes sensores analógicos y digitales, tiene la capacidad de habilitar y deshabilitar fuentes reguladas de *12 V* y *24 V*, además de emitir mensajes al usuario a través de una bocina y LEDs RGB programables.
+Para el sistema central de procesamiento, se usa una **Intel®️ NUC Board** con Linux 16.04 server. Para el sistema de respaldo se emplea un **dsPIC 30F4011**, el cual conecta diferentes sensores analógicos y digitales, tiene la capacidad de habilitar y deshabilitar fuentes reguladas de *12 V* y *24 V*, además de emitir mensajes al usuario a través de una bocina y leds RGB programables.
 
 **\*** La información detallada del sistema se encuentra alojada en el repositorio: \ link \
 
@@ -15,25 +15,35 @@ Para el sistema central de procesamiento, se usa una **Intel®️ NUC Board** co
 Este repositorio se encuentra organizado de la siguiente forma:
 
 ### 2.1. PIC
-* *Timer.c*:  Esta archivo genera un reloj a frecuencia constante en un microcontrolador **PIC 16f506**, el cual sirve como base de tiempo para garantizar que el sistema de firmware esta en funcionamiento.
+* *Timer.c*:  Este archivo genera un reloj a frecuencia constante en un microcontrolador **PIC 16f506**, el cual sirve como base de tiempo para garantizar que el sistema de firmware está en funcionamiento.
 ### 2.2. Python
-Estos archivos son nodos para ROS, los cuales interacturan entre si por medio de topicos para el monitoreo, procesamiento y acción sobre los diferentes modulos que conforman el sistema **PilotScan**.
-* *Firmware.py*:  Nodo encargado de la recepcion y transmision serial con el sistema de respaldo.
-* *Monitoring.py*:  Nodo encargado del procesamiento, codificación y decodificación de la información mediante protocolos diseñados para cada caso especifico.
+Estos archivos son nodos para ROS, los cuales interactúan entre sí por medio de tópicos para el monitoreo, procesamiento y acción sobre los diferentes módulos que conforman el sistema **PilotScan**.
+
+* *Firmware.py*:  Nodo encargado de la recepción y transmisión serial con el sistema de respaldo.
+
+* *Monitoring.py*:  Nodo encargado del procesamiento, codificación y decodificación de la información mediante protocolos diseñados para cada caso específico.
+
 * *Resources.py*:  Nodo que lee la información del estado del sistema y la publica por medio de tópicos separados como el estado de memoria, la temperatura de los núcleos y entre otros.
 
 ### 2.3. dsPIC
 #### 2.3.1. Include
-* *ports.h*:  Librería para hacer asignaciones de pines segun su uso y declaracion de variables globales.
+
+* *ports.h*:  Librería para hacer asignaciones de pines según su uso y declaración de variables globales.
+
 * *NOTAS.C*:  Librería para definir el tiempo de una nota usada por el Buzzer en el sistema.
+
 * *TONOS.C*:  Librería donde se definen las notas musicales separado por octavas en 4 grupos de frecuencias diferentes.
-* *SerialProtocol.h*:  Librería encargada de la codificación y decodificación de la información mediante protocolos diseñados para cada caso especifico.
-* *Hadware_actions.h*:  Librería usada para generar acciónes o notificaciones del estado del sistema mediante el buzzer o los LEDs RGB.
-* *Nuc_interface.h*:  Librería usada para encender y apagar el sistema de computo central.
+
+* *SerialProtocol.h*:  Librería encargada de la codificación y decodificación de la información mediante protocolos diseñados para cada caso específico.
+
+* *Hadware_actions.h*:  Librería usada para generar acciones o notificaciones del estado del sistema mediante el buzzer o los LEDs RGB.
+
+* *Nuc_interface.h*:  Librería usada para encender y apagar el sistema de cómputo central.
+
 * *I2C_DIR*:  Libreria que contiene las definiciones de direcciones I2C para la comunicación con algunos sensores, las funciones correspondientes para establecer dicha comunicación.
 
 #### 2.3.2. Main
-En el archivo *main.c* se hace uso de las librerias mencionadas anteriormente, se reliza la configuración de los diferentes perifericos de microcontrolador como modulo ADC, I2C, RS232, entre otors. Adicionalmente, se realiza la configuración y activación de interrupciones.
+En el archivo main.c se hace uso de las librerías mencionadas anteriormente, se realiza la configuración de los diferentes periféricos de microcontrolador como modulo ADC, I2C, RS232, entre otros. Adicionalmente, se realiza la configuración y activación de interrupciones.
 
 ---
 
