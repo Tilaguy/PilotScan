@@ -48,14 +48,14 @@ En el archivo main.c se hace uso de las librerías mencionadas anteriormente, se
 ---
 
 ## 3. Comunicación serial **computador-dsPIC**
-El protocolo que se usa para la comunicación entre el microcontrolador y el computador, genera un número que codifica la información en hexadecimal, esta codificación depende de quién es emisor del mensaje, esta codificación se explica más detalladamente a continuación. Además, el protocolo cuenta con un Byte de inicio (*'$'*) que indica el comienzo del mensaje y un salto de línea (*'\n'*) que informa el final. En cualquier caso, si los Bytes de información toman los valores de 0, significa un error en la codificación.
+El protocolo que se usa para la comunicación entre el microcontrolador y el computador genera un número que codifica la información en hexadecimal, esta codificación depende de quién es emisor del mensaje, esta codificación se explica más detalladamente a continuación. Además, el protocolo cuenta con un Byte de inicio (*'$'*) que indica el comienzo del mensaje y un salto de línea (*'\n'*) que informa el final. En cualquier caso, si los Bytes de información toman los valores de 0, significa un error en la codificación.
 
 ### 3.1. Protocolo de envió desde la Intel® NUC Board
 Este protocolo se construye a partir de una tabla de valores constantes, los cuales indican el estado del sistema en diferentes ámbitos tales como: monitoreo y control de las fuentes, la comunicación de problemas de ejecución y otros requerimientos necesarios para el correcto funcionamiento del sistema. Dicho protocolo consta de dos Byte, los cuales codifican la información.
 
-El primer Byte (**data1**) indica el origen de la información (VN-300, Lidar, estado del sistema, etc) de la cual se está dando a conocer su estado. El segundo Byte (**data2**) informa el estado y da idea de cómo debe proceder el microcontrolador. Los dos Bytes restantes corresponden al checksum, quien funciona como sistema de detección de errores en el proceso de comunicación, pues dichos Bytes deben corresponden a la suma de los dos primeros (**dato1+dato2**).
+El primer Byte (**data1**) indica el origen de la información (VN-300, LiDAR, estado del sistema, etc.) de la cual se está dando a conocer su estado. El segundo Byte (**data2**) informa el estado y da idea de cómo debe proceder el microcontrolador. Los dos Bytes restantes corresponden al checksum, quien funciona como sistema de detección de errores en el proceso de comunicación, pues dichos Bytes deben corresponden a la suma de los dos primeros (**dato1+dato2**).
 
-Cada mensaje es interpretado por el microcontrolador quien efectúa algún tipo de acción, ya sea realizando un encendido o apagado de algún elemento, activando alertas auditivas o alertas visuales a través de LEDs RGB.
+Cada mensaje es interpretado por el microcontrolador quien efectúa algún tipo de acción, ya sea realizando un encendido o apagado de algún elemento, activando alertas auditivas o alertas visuales a través de leds RGB.
 
 * **P. ej.** Si la *temperatura media de los núcleos del sistema de cómputo* esta entre 35 °C y 40 °C, en microcontrolador debe *encender los ventiladores* en cierta forma particular.
   * Mensaje enviado:
@@ -67,7 +67,7 @@ Cada mensaje es interpretado por el microcontrolador quien efectúa algún tipo 
   ~~~
   * Acción tomada por el microcontrolador:
   ~~~
-  - Encendido de ventidador ( PWM ~ 60% )
+  - Encendido de ventilador ( PWM ~ 60% )
   - LED RGB 4 ([R,G,B] = [25,128,0])
   ~~~
 #### Tabla 1. Mensajes del sistema.
@@ -130,7 +130,7 @@ data 1 | data 2 | message | meaning | R | G | B |LED
 2 | D |
 2 | E |
 2 | F |
-#### Tabla 4. Mensajes del estado de la camara.
+#### Tabla 4. Mensajes del estado de la cámara.
 data 1 | data 2 | message | meaning
 -- | -- | -- | --
 3 | 0 |         |Reserve
@@ -190,7 +190,7 @@ A | F |
 ### 3.2. Protocolo de envió desde el dsPIC
 Este protocolo se construye a partir de una tabla de valores constantes y los datos numéricos codificados en hexadecimal, que informan al computador sobre las variables medidas por el microcontrolador. Dicho protocolo consta de tres Bytes que codifican la información, los cuales son enviados al computador para ponerlo en conocimiento de los valores numéricos de las variables fundamentales para el funcionamiento de las tarjetas.
 
-El primer Byte corresponde al tipo de información (**command**) como corrientes, voltajes, etc, y su origen. Los siguientes dos Bytes son la información numérica codificada (**data1**, **data2**), la cual puede ser entera o flotante. Adicionalmente, existen dos Bytes corresponden al checksum, el cual permite verificar la información transmitida como protocolo de detección de errores y además permite conocer si el dato numérico enviado es un entero con rango [0, 255] (**command+data1+data2+0x05**), o un flotante con una cifra decimal de precisión (**command+data1+data2**).
+El primer Byte corresponde al tipo de información (**command**) como corrientes, voltajes, etc., y su origen. Los siguientes dos Bytes son la información numérica codificada (**data1**, **data2**), la cual puede ser entera o flotante. Adicionalmente, existen dos Bytes corresponden al checksum, el cual permite verificar la información transmitida como protocolo de detección de errores y además permite conocer si el dato numérico enviado es un entero con rango [0, 255] (**command+data1+data2+0x05**), o un flotante con una cifra decimal de precisión (**command+data1+data2**).
 
 
 * **P. ej.** La *corriente proveniente de la fuente de 5 V* medida por el sensor es de *0.45 A*, a su vez *el altímetro* detecta una altura de *64 m*.
@@ -251,9 +251,9 @@ D|	x|	y|	Hight|
 ### 4. Software requirements
 
 #### 4.1. System_monitor Installation
-Insatalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
+Instalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
 
-Dentro de la carpeta src del workspace, se debe descargar el *system_monitor* usando la siguiente instrucción:
+Dentro de la carpeta *src* del *workspace*, se debe descargar el *system_monitor* usando la siguiente instrucción:
 ~~~
 $ git clone https://github.com/RobotnikAutomation/system_monitor
 ~~~
@@ -261,7 +261,7 @@ Es necesario instalar algunas dependencias adicionales para su ejecución,
 ~~~
 $ sudo apt-get install sysstat ifstat ntpdate
 ~~~
-Luego, se compila en el workspace y se asigna el directorio *devel*,
+Luego, se compila en el *workspace* y se asigna el directorio *devel*,
 ~~~
 $ catkin_make
 $ source devel/setup.bash
