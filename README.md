@@ -1,7 +1,5 @@
 ## PILOT SCAN
 ---
-En construccion...
----
 ### 1. Descripción
 
 En este repositorio se encuentran alojados los algoritmos necesarios para elaborar una interfaz de comunicación codificada con capacidad de detección de errores, durante el proceso de envío. Esta interfaz hace parte del sistema titulado **PilotScan\***, el cual consta de un sistema central de procesamiento y un sistema de respaldo que monitora de forma continua, el estado del sistema tanto a nivel hardware como software, además tiene la capacidad de realizar acciones indicadas por sistema central, sobre los diferentes módulos que conforman el sistema.
