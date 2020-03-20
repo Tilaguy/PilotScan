@@ -250,13 +250,32 @@ D|	x|	y|	Hight|
 
 ### 4. Software requirements for computer
 
---- ROS Ubuntu
---- VN 300
---- M8
---- 
+#### 4.1. ROS Kinetic instaliation
+
+To install robot operating system (ROS) in the kinetic version for ubuntu 16.04, you should follow the steeps descrived in http://wiki.ros.org/kinetic/Installation/Ubuntu.
+
+#### 4.2. VN300 ROS node
+
+The installing of VN-300 node for ROS, it begins with downloading the repository in *workspace/src* directory.
+~~~
+$ git clone https://github.com/HaroldMurcia/vectornav.git
+~~~
+Afeter that, you have to compilate the *workspace* directory.
+~~~
+$ catkin_make
+$ source devel/setup.bash
+~~~
+Finaly, The node could be launched with ROS instrction:
+~~~
+$ roslaunch vectornav vectornav.launch
+~~~
+#### 4.3. Quanergy M8 liDAR
+
+To be able to launch the ROS node of Quanergy M8 LiDAR, you have to follow the steeps of the next repository.
+https://github.com/mfassler/python3-quanergyM8
 
 #### 4.1. System_monitor Installation
-Instalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
+La instalación del System_monitor node para ROS: (https://github.com/RobotnikAutomation/system_monitor)
 
 Dentro de la carpeta *src* del *workspace*, se debe descargar el *system_monitor* usando la siguiente instrucción:
 ~~~
