@@ -3,7 +3,7 @@
 //#device ADC=12
 #define OSC_INTERNAL
 //#use delay (clock = 120000000)
-#fuses FRC_PLL16,NOPROTECT,NOWDT,NOPUT,MCLR
+//#fuses FRC_PLL16,NOPROTECT,NOWDT,NOPUT,MCLR
 
 //#use RS232(BAUD=9600,BITS=8,PARITY=N,XMIT=PIN_C13,RCV=PIN_C14,TIMEOUT=10)// UART
 //#use i2c(Master,sda=PIN_F2,scl=PIN_F3)// I2C
@@ -11,7 +11,7 @@
 /********************************************/
 // Import Libraies
 /********************************************/
-//#include <Include\ports.h>
+#include "ports.h"
 #include <Include\NOTAS.c>
 #include <Include\TONOS.c>
 #include <Include\serialProtocol.h>
